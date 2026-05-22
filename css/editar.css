@@ -1,0 +1,126 @@
+body{
+    background-image: url('../img/f9.png');
+}
+main {
+    height: min-content !important;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 5vh;
+    width: min-content;
+    background-color: rgba(255, 255, 255, 0.750);
+    border-radius: 10px;
+    padding: 20px;
+}
+#titulo {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+#butBox {
+    display: flex;
+    justify-content: space-between;
+}
+.box {
+    display: flex;
+    justify-content: center;
+    font-size: x-large;
+    margin: 15px 0px;
+    align-items: center;
+}
+.box input {
+    margin: 10px 40px;
+}
+.box
+main button {
+    width: 219px;
+}
+.box input {
+    margin: 0px 10px;
+    height: min-content;
+}
+.box textarea {
+    border-radius: 10px;
+    width: 219.1px;
+    max-width: 219.1px;
+    height: 50px;
+    max-height: 50px;
+    padding: 10px;
+    font-size: large;
+    margin: 0px 10px;
+    border: 1px solid black;
+    outline: none;
+    resize: none;
+}
+#boxLab {
+    display: flex;
+    justify-content: space-around;
+    font-size: x-large;
+    margin: 15px 0px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    align-items: center;
+}
+#boxLab label {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    height: min-content !important;
+}
+#xpp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#xpp label {
+    margin: 0px 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    cursor: pointer;
+}
+.tramoEstado {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+.tramoEstado h4 {
+    margin: 1%;    
+}
+.but{
+    display: flex;
+    justify-content: right;
+}
+.but button {
+    margin: 0px 5px 0px 5px;
+    width: 219px;
+}
+#canc {
+    color: rgb(102, 71, 74) !important;
+    background-color: rgb(242, 204, 204) !important;
+}
+#canc:hover {
+    color: rgb(242, 204, 204) !important;
+    background-color: rgb(116, 40, 49) !important;
+}
+#msgEnc {
+    font-size: large;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+}
+#bul {
+    width: 400px !important;
+    max-width: 400px !important;
+}
+.precio {
+    width: 8vh !important;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

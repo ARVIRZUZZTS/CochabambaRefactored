@@ -1,0 +1,454 @@
+body{
+    background-image: url('../img/font2.jpg');
+}
+main {
+    display: block !important;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 2%;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.700);
+    border-radius: 10px;
+    justify-content: start !important;
+    height: min-content !important;
+}
+
+#top {
+    border-radius: 10px;
+}
+#data {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+#data h1 {
+    margin: 5px 185px;
+}
+#data div {
+    display: flex;
+}
+#data div h2 {
+    display: flex;
+    margin: 5px 30px;
+}
+#butts {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 150px;
+}
+#butts div button {
+    margin: 0px 10px;
+}
+#titles {
+    display: flex;
+    margin: 15px 0px 0px 0px;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    align-items: center;
+}
+#titles h2{
+    margin: 0px;
+}
+#titles h2:nth-child(1) {
+    width: 8%;
+}
+#titles h2:nth-child(2) {
+    width: 10%;
+}
+#titles h2:nth-child(3) {
+    width: 12%;
+}
+#titles h2:nth-child(4) {
+    width: 13%;
+}
+#titles h2:nth-child(5) {
+    width: 9%;
+}
+#titles h2:nth-child(6) {
+    width: 17%;
+}
+#titles h2:nth-child(7) {
+    width: 3.5%;
+}
+#titles h2:nth-child(8) {
+    width: 12%;
+}
+#titles h2:nth-child(9) {
+    width: 10%;
+}
+#titles h2:nth-child(10) {
+    text-align: right !important;
+}
+#encomiendas {
+    max-height: 38vh;
+    overflow-y: visible;
+    overflow-x: hidden;
+    margin: 20px 0px;
+    display: flex;
+    flex-direction: column;
+}
+#encomiendas p {
+    margin: auto;
+} 
+.encomienda-item {
+    display: flex;
+    font-size: large;
+    padding: 0px 10px;
+    align-items: center;
+} 
+.encomienda-item textarea {
+    border-radius: 10px;
+    width: 219.1px;
+    max-width: 219.1px;
+    max-height: 100px;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+    margin: 0px 10px;
+    border: 1px solid black;
+    outline: none;
+    resize: none;
+    margin: 5px 10px;
+}
+.encomienda-item textarea:nth-child(1) {
+    width: 130px !important;
+    text-align: center !important;
+}
+.encomienda-item textarea:nth-child(3) {
+    width: min-content !important;
+    text-align: center !important;
+}
+.encomienda-item textarea:nth-child(5) {
+    width: min-content !important;
+    text-align: center !important;
+}
+.encomienda-item textarea:nth-child(6) {
+    width: 100% !important;
+}
+.encomienda-item textarea:nth-child(7) {
+    display: none;
+}
+.encomienda-item textarea:nth-child(8) {
+    width: 50px !important;
+    text-align: center !important;
+}
+.encomienda-item textarea:nth-child(9) {
+    width: min-content !important;
+    text-align: center !important;
+    font-weight: bolder;
+}
+.encomienda-item textarea:nth-child(10) {
+    width: min-content !important;
+    text-align: center !important;
+}
+#noEnc {
+    font-size: x-large;
+}
+#precio {
+    display: flex;
+    justify-content: space-evenly;
+}
+#pagosFoo {
+    display: flex;
+    justify-content: space-evenly;
+    width: 80%;
+}
+
+#precio h2 {
+    margin-top: 0px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.xp {
+    color: rgb(255, 0, 0);
+}
+/*///////////////////////////////////////////////////////  debugger */
+/*html.debug-print #ticket {
+    display: flex !important;
+    flex-direction: column;
+}*/
+/*/////////////////////////////////////////////////////// */
+#ticket {
+    display: none;
+    height: min-content !important;
+}
+#boletin {
+    display: none;
+    height: min-content !important;
+}
+#imgPr {
+    width: 300px;
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+}
+#imgPr2, #imgPr3 {
+    width: 300px;
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+}
+#resumen {
+    display: none;
+    height: min-content;
+}
+
+@media print {
+    @page {
+        @top-right {
+          content: counter(page);
+          font-size: 10px;
+          font-family: monospace;
+        }
+    }
+    main , header {
+        display: none !important;
+    }
+    
+    /* Ocultar todos por defecto */
+    #ticket, #boletin, #resumen {
+        display: none !important;
+    }
+    
+    /* Mostrar solo si tienen la clase print-visible */
+    #ticket.print-visible {
+        display: flex !important;
+        flex-direction: column;
+        font-family: monospace !important;
+        font-size: 12px;
+        text-align: center;
+        width: 100% !important;
+        counter-reset: page;
+        page-break-inside: auto;
+        break-inside: auto;
+        page-break-after: auto;
+        page-break-before: auto;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible;
+        position: static;
+    }
+    
+    #boletin.print-visible {
+        display: flex !important;
+        flex-direction: column;
+        font-family: monospace !important;
+        font-size: 12px !important;
+        text-align: center;
+        width: 100% !important;
+    }
+    
+    #resumen.print-visible {
+        display: block !important;
+        height: auto !important;
+    }
+    
+    #ticket.print-visible * {
+        display: block;
+        visibility: visible;
+    }
+    .encomienda-print *,
+    #titPrint * {
+        box-sizing: border-box !important;
+    }
+    #ticket h1 {
+        text-align: center;
+        margin: auto;
+    }
+    #ticket h3, #ticket h2 {
+        margin: 0px;
+        text-align: left;
+    }
+    #titlesP {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5%;
+    }
+    #titlesP div h2 {
+        margin: 0px;
+    } 
+    .encomienda-print , #titPrint {
+        width: 100%;
+        display: flex !important;
+    }
+    .encomienda-print {
+        min-height: 1cm;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    .encomienda-print h3 , #titPrint h2, .encomienda-print h5, .tramoPago{
+        border: 1px solid black ;
+        margin: 0px;
+        padding: 0px;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center !important;
+        border-left: none;
+        border-bottom: none;
+    }
+   
+    #tt, .ttc {width: 3%; max-width: 3%;}
+    #num, .conE {width: 8%; max-width: 8%;}
+    #con, .consg {width: 20%; max-width: 20%;}
+    #ci, .ci {width: 10%; max-width: 10%;}
+    #det, .bult {width: 20%; max-width: 20%;}
+    #cel, .cel {width: 9%; max-width: 9%;}    
+
+    #fe, .fe {width: 7%; max-width: 7%;}
+    .pago {width: 7.5%; max-width: 7.5%;}
+
+    #fir, .fir {width: 13%; max-width: 13%; border-right: none !important;}
+
+    #destiny {
+        text-align: center !important;
+        margin: 1%;
+        font-family: cursive !important;
+    }
+    #pagos {
+        display: flex !important;
+        justify-content: space-around;
+        page-break-inside: avoid; /* Evita cortar este bloque a la mitad */
+        break-inside: avoid;
+    }
+    #pagos h2 {
+        margin: 0px !important;
+        text-align: left !important;
+    }
+    #firmas {
+        page-break-inside: avoid; /* Evita cortar este bloque a la mitad */
+        break-inside: avoid;
+    }
+    #firmas div {
+        display: flex !important;
+        justify-content: space-around;
+    }
+    #firmas div h3, #firmas h3{
+        border-top: 1px solid black !important;
+        text-align: center;
+    }
+    #firmas div h3 {
+        margin: 0px 2px 0px 2px;
+    }
+    #impBox {
+        border: 1px solid black !important;
+    }
+    .espacio {
+        height: 1cm;
+        page-break-inside: avoid; /* Evita cortar este bloque a la mitad */
+        break-inside: avoid;
+    }
+    
+    #boletin {
+        display: flex; /* Se muestra solo al imprimir */
+        flex-direction: column;
+        font-family: monospace !important;
+        font-size: 12px; /* Tamaño estándar de ticket */
+        text-align: center;
+        width: 100% !important;
+    }
+    #boletin p {
+        text-align: left !important;
+        margin: 0px;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: large;
+    }
+    #boletin h2 {
+        text-align: left !important;
+        margin: 0px;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+    #nums2 {
+        display: flex;
+    }
+    #nums2 div h4{
+        margin: 0px;
+        width: 150px;
+    }
+    #boletin h2{
+        margin: 0px;
+        width: 300px;
+        text-align: left;
+    }
+    #dat2 h1 {
+        margin: 0px;
+        text-align: left !important;
+    }
+    #dat2 h2 {
+        margin: 0px;
+        width: 300px;
+        text-align: left;
+    }
+    #guia {
+        text-align: left !important;
+    }
+    #impDiv2 {
+        border-top: 1px solid black !important;
+        border-bottom: 1px solid black !important;
+        padding: 2px;
+    }
+    .destinos {
+        font-size: xx-large;
+    }
+    #impDiv2 h1{
+        margin: 0px;
+    }
+    #firmas2 {
+        border-top: 1px solid black !important;
+    }
+    #firmas2 h2 {
+        text-align: center !important;
+    }
+    #notaF p {
+        text-align: center;
+    }
+    #resumen h2, #resumen h3 {
+        text-align: left;
+    }
+    #titu {
+        text-align: center !important;
+    }
+    #resumen h2, #resumen h3, #resumen h4, #resumen div h2 {
+        margin: 0px;
+    }
+    #resumen div {
+        display: flex;
+        width: 100%;
+    }
+    #fechHR {
+        display: flex;
+        justify-content: space-between;
+    }
+    #listR {
+        display: flex;
+        flex-direction: column;        
+    } 
+    #titRes h3, #listR h4 {
+        border-top: 1px solid black;
+        text-align: center;
+        align-content: center;
+    }
+    #titRes h3:nth-child(1), #listR h4:nth-child(1) {
+        width: 40%; 
+    }
+    #titRes h3:nth-child(2), #listR h4:nth-child(2) {
+        width: 30%;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+    #titRes h3:nth-child(3), #listR h4:nth-child(3) {
+        width: 30%;
+    }
+    #spaceRes { 
+        min-height: 3cm;
+        height: 3cm;
+        max-height: 3cm;
+    }
+}

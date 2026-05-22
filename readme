@@ -1,0 +1,70 @@
+numeros actualizados
+telf jaime y corporativo
+al revez los datos de los telefonos
+SC->CBBA
+CBBA->SC	
+
+---------- SQL ----------
+ENCOMIENDAS
+cambiar la tabla contenido por destino
+eliminar la columna entregadoPor y entregado 
+CHOFER
+eliminar la tabla 
+PLACA
+eliminar la tabla 
+PROPIETARIO
+eliminar la tabla 
+ZONAS
+nueva tabla 
+FLOTA
+nueva tabla
+cambiar estadoPaga en ENCOMIENDAS
+P = 1
+XP = 2
+18:33
+---------------------------
+Nuevo estadoPaga
+P - Pagado = Cancelado
+XP - Por Pagar
+--- --- --- --- --- --- ---
+1 - Cancelado 
+2 - Por Pagar
+3 - Cancelado | Por Pagar
+4 - Por Pagar | Cancelado
+---------para debugger print
+<html class="debug-print"> en F12 devtool html 
+html.debug-print #ticket {
+    display: flex !important;
+    flex-direction: column;
+}
+-----------------------------------
+BOT DE WPP
+chamo se te ocurre un caso mas que puede presentar un mensaje auto de wpp a las 8:00 am
+queria python pero dice que es mas propenso a sufrir ban por spam
+otro que es mas reciente y no sufre ese tema es node-cron con node.js
+pero luego de estos estados
+pues no se si paso por alto algo mas
+COmo tal tengo 2 telefonos, uno de la persona que recibe el paquete y uno que envia, y no se si me olvido algo o se te ocurre un caso adicional
+tenemos estados:
+bot de wpp opciones 
+opcion de respuesta msj no valido
+mmm esta bien si vdd sisi
+
+Respuestas despues de Enviar
+1 - Enviado (este es nuestro EXITO)
+2 - No enviado (esta es una falla externa que no entre en el resto de categorias)
+3 - Numero de Consignatario no Valido
+4 - Numero de Remitente no Valido
+5 - Numeros no validos
+6 - Error de envio
+
+Tipos de envio
+10 - Enviar Cancelado un tramo (estadoPaga == '1')
+11 - Enviar Por Pagar un tramo (estadoPaga == '2')
+12 - Enviar Cancelado dos tramos (estadoPaga == '1')
+13 - Enviar Por pagar dos tramos (estadoPaga == '2')
+14 - Enviar Cancelado | Por Pagar dos tramos (estadoPaga == '3')
+15 - Enviar Por Pagar | Cancelado dos tramos (estadoPaga == '4')
+1x6 - Numero de Consignatario igual al Remitente (en este caso seria 106, 116, 126, 136, 146, 156 dependiendo del estadoPaga ya que el 6 es lo que indica que los numeros de celular son iguales)
+
+Entonces

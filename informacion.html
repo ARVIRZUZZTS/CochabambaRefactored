@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Informacion Encomiendas</title>
+        <link rel="stylesheet" href="css/informacion.css">
+        <link rel="stylesheet" href="css/global.css">
+    </head>
+<body>
+    <header>
+        <img src="img/logoX.png" alt="">
+    </header>
+    <main>
+        <div id="top">
+            <div id="data">
+                <h1 id="infoH1"></h1>
+                <div>
+                    <h2 id="prTit"></h2>
+                    <h2 id="chTit"></h2>
+                    <h2 id="ayTit"></h2>
+                </div>
+                <div>
+                    <h2 id="plTit"></h2>
+                    <h2 id="orTit"></h2>
+                    <h2 id="deTit"></h2>
+                    <h2 id="feTit"></h2>
+                    <h2 id="hrTit"></h2>
+                </div>
+                <div id="butts">
+                    <div>
+                        <button onclick="printDiv('1')">IMPRIMIR MANIFIESTOS</button>
+                        <button id="crBut" onclick="crear()">CREAR ENCOMIENDA</button>
+                        <button onclick="resPrint()">IMPRIMIR RESUMEN</button>
+                        <button onclick="printDiv('2')">IMPRIMIR VERTICAL</button>
+                    </div>
+                    <div>
+                        <button onclick="edit()">EDITAR</button>
+                        <button onclick="back()">ATRAS</button>
+                    </div>
+                </div>
+            </div>
+            <div id="titles"></div>
+        </div>
+        <div id="encomiendas"></div>
+        <div id="precio">
+            <button onclick="eliminar()">Eliminar</button>
+            <div id="pagosFoo"></div>
+        </div>
+    </main>
+
+    <div id="ticket">
+        <div class="rotated-content">
+            <div id="titlesP">
+                <div>
+                    <h3 id="prTk"></h3>
+                    <h3 id="chTk"></h3>
+                    <h3 id="ayTk"></h3>
+                    <h3 id="viTk"></h3>
+                </div>
+                <div>
+                    <img id="imgPr" src="img/logXXF.png" alt="">
+                    <h2 id="destiny"></h2>
+                </div>
+                <div>
+                    <h3 id="cdTk"></h3>
+                    <h3 id="fcTk"></h3>
+                    <h3 id="plTk"></h3>
+                    <h3 id="horaP"><b></b> </h3>
+                </div>
+            </div>
+            <div id="titPrint"></div>
+            <div id="impDiv"></div>
+            <div id="pagos"></div>
+            <br>
+            <br>
+            <br>         
+            <div id="firmas">
+                <div>
+                    <h3 id="auxi">Despachador</h3>
+                    <h3>Receptor</h3>
+                    <h3>Recibi Conforme<br>CONDUCTOR</h3>
+                </div>
+            </div>
+            <div id="espacioBox"></div>
+        </div>
+    </div>
+
+    <div id="boletin"></div>
+    <div id="resumen"></div>
+    <script src="js/informacion.js"></script>
+</body>
+

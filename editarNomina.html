@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDITAR VIAJE</title>
+    <link rel="stylesheet" href="css/editarNomina.css">
+    <link rel="stylesheet" href="css/global.css">
+</head>
+<body>
+    <header>
+        <img src="img/logoX.png" alt="">
+    </header>
+    <main>
+        <h1>EDITAR DATOS NECESARIOS DEL VIAJE:</h1>
+        <div id="titleData">
+            <h2 id="fechaTitle"></h2>
+            <h2 id="origenTitle"></h2>
+        </div>
+        <form id="viajeForm">
+            <div id="dataInp">
+                <div class="box">
+                    <input type="text" id="propInp" list="proplist" maxlength="100" placeholder="Propietario" name="prop" oninput="onSelectPropietario()">
+                    <input type="text" id="chofInp" list="choflist" maxlength="100" placeholder="Chofer" name="chof" oninput="onSelectChofer()">
+                    <input type="text" id="ayudInp" maxlength="100" placeholder="Relevo" name="ayud">
+                </div>
+                <div class="box">
+                    <input type="text" id="placInp" list="placlist" maxlength="10" placeholder="Placa" name="plac" oninput="onSelectPlaca()">
+                    <select id="destInp" name="dpto"></select>
+                    <input type="text" id="horaInp" maxlength="5" placeholder="HH:MM" name="hora">
+                </div>
+            </div>
+            <div class="but">
+                <button type="button" onclick="back()" id="canc">CANCELAR</button>
+                <button type="button" onclick="fin()">GUARDAR</button>
+            </div>
+            <p id="msgVia">EDITE LOS CAMPOS NECESARIOS</p>
+        </form>
+        <datalist id="placlist"></datalist>
+        <datalist id="proplist"></datalist>
+        <datalist id="choflist"></datalist>
+    </main>
+    <script src="js/editarNomina.js"></script>
+</body>

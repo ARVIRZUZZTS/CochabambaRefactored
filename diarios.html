@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encomiendas Diarias</title>
+    <link rel="stylesheet" href="css/diarios.css">
+</head>
+<body>
+    <header>
+        <img src="img/logoX.png" alt="">
+    </header>
+    <main>
+        <div id="top">
+            <h1 id="topTitleDia"></h1>
+            <button onclick="back()">ATRAS</button>
+            <button id="encomiendaNewBtn" onclick="encomiendaGo()">CREAR ENCOMIENDA</button>
+        </div>
+        <div id="titles">
+            <h2>Elegir<br>Placa</h2>
+            <h2>Remitente</h2>
+            <h2>Telf R.</h2>
+            <h2>Consignatario</h2>
+            <h2>Telf C.</h2>
+            <h2>Detalle</h2>
+            <h2>VD</h2>
+            <h2>Estado<br>Pago</h2>
+            <h2>Total</h2>
+            <h2>Imprimir</h2>
+            <h2>Editar</h2>
+        </div>
+        <div id="encomiendas"></div>
+        <h3 id="msgDia">Agregue las placas y guardelas.</h3>
+        <div id="precio">
+            <h2 id="porPagar">Por Pagar: 0.00 Bs</h2>
+            <h2 id="cancelado">Cancelado: 0.00 Bs</h2>
+            <h2 id="total">Total: 0.00 Bs</h2>
+        </div>
+        <div id="placaL"></div>
+    </main>
+    <div id="print"></div>
+    <script src="js/diarios.js"></script>
+</body>
+

@@ -1,0 +1,63 @@
+body{
+    background-image: url('../img/font.jpg');
+}
+main {
+    flex-direction: column;
+    height: min-content !important;
+    margin: auto;
+    margin-top: 9%;
+    width: min-content;
+    background-color: rgba(255, 255, 255, 0.602);
+    border-radius: 10px;
+    padding: 2vh;
+}
+main h1 {
+    background-color: white;
+    margin: 0px;
+    padding: 15px 10px;
+    border-radius: 10px;
+}
+main h2 {
+    background-color: white;
+    margin: 10px 10px;
+    padding: 15px 10px;
+    border-radius: 10px;
+}
+main p {
+    background-color: white;
+    margin: 10px 10px;
+    padding: 15px 10px;
+    border-radius: 10px;
+    font-size: large;
+}
+#titleData {
+    display: flex;
+    justify-content: space-between;
+}
+.box {
+    display: flex;
+    justify-content: center;
+}
+.box input {
+    margin: 10px 40px;
+    border: solid 1px black;
+}
+main button {
+    width: 219px;
+}
+.but {
+    margin-top: 3%;
+    display: flex;
+    justify-content: right;
+}
+.but button {
+    margin: 0px 5px 0px 5px;
+}
+#canc {
+    color: rgb(89, 38, 43) !important;
+    background-color: rgb(242, 204, 204) !important;
+}
+#canc:hover {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgb(131, 35, 46) !important;
+}

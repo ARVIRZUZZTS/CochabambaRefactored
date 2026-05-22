@@ -1,0 +1,53 @@
+body {
+    background-image: url('../img/f1.png');
+}
+main form {
+    margin: 0px 5%;
+}
+form H1 , h2{
+    text-align: center;
+}
+form input {
+    margin: 0.7vh;
+}
+form button {
+    margin: 0.7vh;
+}
+#logForm {
+    background-color: rgba(255, 255, 255, 0.750);
+    padding: 1vh;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;    
+}
+#logForm H1 {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1vh;
+}
+#regForm {
+    background-color: rgba(255, 255, 255, 0.750);
+    padding: 1vh;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+#regForm H1 {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1vh;
+}
+.showBox {
+    align-items: center;
+    display: flex;
+}
+#depto {
+    font-size: 1.4em;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+#msgLog, #msgReg {
+    margin: 0px;
+}

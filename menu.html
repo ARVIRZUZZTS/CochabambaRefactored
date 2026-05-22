@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="libs/flatpickr/flatpickr.min.css">
+    <script src="libs/flatpickr/flatpickr.min.js"></script>
+    <script src="libs/flatpickr/es.js"></script>
+</head>
+<body>
+    <header>
+        <img src="img/logoX.png" alt="">
+    </header>
+    <main>
+        <div id="fechaBox">
+            <label for="fecha" id="titleFech">Selecciona una fecha:</label>
+            <input type="text" id="fecha" name="fecha">
+            <button onclick="showOp(event)">OPCIONES</button>
+        </div>
+        <div id="boxi">
+            <div id="all">
+                <div id="titulo">
+                    <h1 id="titleEncomiendas"></h1>
+                </div>
+                <div id="encomiendas">
+                    <div class="titleMenu">
+                        <h3 class="placH3">Placa</h3>
+                        <h3 class="destH3">Destino</h3>
+                        <h3 class="chofH3">Chofer</h3>
+                        <h3 class="infoH3">Información</h3>
+                    </div>
+                    <div id="encBox"></div>
+                    <button id="addBut" onclick="goAddBus()">AGREGAR ENVIO</button>
+                </div>                
+            </div>
+            <div id="but">
+                <button onclick="encDia()">ENCOMIENDAS DIARIAS</button>
+            </div>
+        </div>
+    </main>
+    <div id="modalOpciones" class="modal">
+        <div class="modal-content">
+            <h2>Opciones</h2>
+            <button onclick="listas()">Configuracion</button>
+            <button onclick="out()">Cerrar Sesión</button>        
+            <button id="princButt" class="cerrar" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>    
+    <script src="js/menu.js"></script>
+</body>

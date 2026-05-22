@@ -1,0 +1,95 @@
+// en caso de querer reactivar firebase para el menu.js
+domcontent
+//cargarDatos(); firebase parte caso de reactivacion descomentar
+last lines
+//en caso de app de celular ver tiempo real datos usar el type="module" y descomentar y rehacer firebase
+//window.manejarDatos = async function() {
+//    const colecciones = ["userSC","choferSC","placaSC","propietarioSC","viajeSC","encomiendaSC","estadoSC","actualizarPEPSC","eliminarSC"];
+//    let datosRecuperados = {};
+//    for (const nombreColeccion of colecciones) {
+//        datosRecuperados[nombreColeccion] = await obtenerDatos(nombreColeccion);}
+//    console.log("Datos obtenidos de Firebase:", datosRecuperados);
+//    localStorage.setItem("datosFirebase", JSON.stringify(datosRecuperados));
+//    localStorage.setItem("ultimaActualizacion", Date.now());
+//    try {
+//        const response = await fetch("php/guardarDatos.php", {
+//            method: "POST",
+//            headers: {"Content-Type": "application/json"},
+//            body: JSON.stringify(datosRecuperados)
+//        });
+//        const resultado = await response.json();
+//        console.log("Respuesta del servidor:", resultado);
+//    } catch (error) {console.error("Error en fetch:", error);}
+//}
+//window.obtenerDatos = async function(nombreColeccion) {
+//    try {
+//        const ref = collection(db, nombreColeccion);
+//        const snapshot = await getDocs(ref);
+//        let datos = [];
+//        snapshot.forEach(docSnap => {datos.push({ id: docSnap.id, data: docSnap.data() });});
+//        return datos;
+//    } catch (error) {console.error(`Error obteniendo datos de ${nombreColeccion}:`, error);return [];}
+//}
+//window.cargarDatos = function() {
+//    const datosGuardados = localStorage.getItem("datosFirebase");
+//    const ultimaActualizacion = localStorage.getItem("ultimaActualizacion");
+//    const tiempoActual = Date.now();
+//    const tiempoLimite = 1000 * 60 * 5;
+//    if (datosGuardados && (tiempoActual - ultimaActualizacion < tiempoLimite)) {
+//        console.log("Cargando datos desde localStorage");
+//        return JSON.parse(datosGuardados);
+//    } else {console.log("Cargando datos desde Firebase...");manejarDatos();}
+//}
+
+// se deberia revisar la carpeta dist de la version original
+
+//Se debe agregar getFirebase.js
+//import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+//import { 
+//    getFirestore, 
+//    collection, 
+//    getDocs, 
+//    query, 
+//    orderBy, 
+//    limit, 
+//    deleteDoc, 
+//    doc 
+//} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+//
+//// 🔹 Configuración de Firebase
+//const firebaseConfig = {
+//    apiKey: 'AIzaSyCB8Ei2H8VsFVBOe7HqmmXQ1bsFKRRaRK0',
+//    authDomain: 'mensajeria-cbba-sc.firebaseapp.com',
+//    projectId: 'mensajeria-cbba-sc',
+//    storageBucket: 'mensajeria-cbba-sc.firebasestorage.app',
+//    messagingSenderId: '175340381441',
+//    appId: '1:175340381441:web:80ed98cfc242631a1e2700',
+//    measurementId: 'G-2TFLE1WJZV'
+//};
+//
+//// 🔹 Inicializar Firebase
+//const app = initializeApp(firebaseConfig);
+//const db = getFirestore(app);
+//
+//export { db, collection, getDocs, query, orderBy, limit, deleteDoc, doc };
+
+//y tambien el firebaseIndex.js que es la conexion con la web 
+//import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+//import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+//
+//// Configuración de Firebase
+//const firebaseConfig = {
+//    apiKey: 'AIzaSyCB8Ei2H8VsFVBOe7HqmmXQ1bsFKRRaRK0',
+//    authDomain: 'mensajeria-cbba-sc.firebaseapp.com',
+//    projectId: 'mensajeria-cbba-sc',
+//    storageBucket: 'mensajeria-cbba-sc.firebasestorage.app',
+//    messagingSenderId: '175340381441',
+//    appId: '1:175340381441:web:80ed98cfc242631a1e2700',
+//    measurementId: 'G-2TFLE1WJZV'
+//};
+//
+//// Inicializa Firebase
+//const app = initializeApp(firebaseConfig);
+//const db = getFirestore(app);
+//
+//export { db, collection, addDoc };

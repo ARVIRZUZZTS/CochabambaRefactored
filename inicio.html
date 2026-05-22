@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+<body>
+    <header>
+        <img src="img/logoX.png" alt="">
+    </header>
+    <main>
+        <form id="logForm">
+            <H1>Iniciar Sesión</H1>
+            <input type="text" placeholder="Nombre de Usuario" name="userL" id="userLog" maxlength="20">
+            <div class="showBox">
+                <input type="password" placeholder="Contraseña" name="passL" id="passLog" maxlength="20">
+                <button id="showLog" type="button" onclick="verLog()">👁️</button>
+            </div>
+            <button type="button" id="logBtn" onclick="login()">Entrar</button>
+            <p id="msgLog"></p>
+        </form>
+        <form id="regForm">
+            <H1>Registrarse</H1>
+            <input type="text" placeholder="Nombre de Usuario" name="userR" id="userReg" maxlength="20">
+            <select id="zonaSelect" name="opcion">
+                <option value="">Seleccione una zona</option>
+            </select>
+            <div class="showBox">
+                <input type="password" placeholder="Contraseña" name="passR" id="passReg" maxlength="20">
+                <button id="showReg" type="button" onclick="verReg()">👁️</button>
+            </div>
+            <button type="button" id="regBtn" onclick="register(event)">Registrarse</button>
+            <p id="msgReg"></p>
+        </form>
+    </main>
+    <script src="js/inicio.js"></script>
+</body>
