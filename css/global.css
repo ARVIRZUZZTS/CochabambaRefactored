@@ -26,7 +26,7 @@ body::before {
 button {
     height: 5vh;
     font-weight: bold;
-    font-size: large;
+    font-size: 2vh;
     color: rgb(255, 255, 255);
     cursor: pointer;
     background-color: rgb(131, 35, 46);

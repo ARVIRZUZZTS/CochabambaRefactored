@@ -35,7 +35,7 @@ main {
 #butts {
     display: flex;
     justify-content: space-between;
-    margin: 10px 150px;
+    margin: 10px 3%;
 }
 #butts div button {
     margin: 0px 10px;

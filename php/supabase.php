@@ -19,11 +19,11 @@ class SupabaseClient {
             'Content-Type: application/json',
             'apiKey: ' . $this->apiKey,
             'Authorization: Bearer ' . $this->apiKey,
-            'Prefer: return=representation'
+            'Prefer: resolution=merge-duplicates'
         ];
         
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURSLOPT_CUSTOMREQUEST, $metodo);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $metodo);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         
         if ($data) {
@@ -40,5 +40,4 @@ class SupabaseClient {
         return json_decode($response, true);
     }
 }
-
 ?>

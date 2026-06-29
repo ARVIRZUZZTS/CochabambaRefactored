@@ -142,6 +142,16 @@ function setZona() {
         document.getElementById("destiny").textContent = destino.toUpperCase();
     }
 }
+function supaViaje() {
+    fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error: " + response);
+            }
+            return response.json();
+        })
+        .catch(error => console.error("Error obteniendo encomiendas:", error));
+}
 function obtenerEncomiendas() {
     fetch(`php/informacion/infoEnco.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => {
