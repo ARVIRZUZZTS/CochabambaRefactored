@@ -101,3 +101,27 @@ select {
 .cerrar:hover {
     background-color: rgb(238, 184, 184);
 }
+
+/* Notificación estilo Toast */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 9999;
+    right: 30px;
+    top: 30px;
+    font-size: 17px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: visibility 0.5s, opacity 0.5s;
+    opacity: 0;
+}
+
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+}

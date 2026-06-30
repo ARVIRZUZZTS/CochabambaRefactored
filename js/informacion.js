@@ -142,6 +142,17 @@ function setZona() {
         document.getElementById("destiny").textContent = destino.toUpperCase();
     }
 }
+function showToast(mensaje, esError = false) {
+    const toast = document.getElementById("toast");
+    toast.textContent = mensaje;
+    toast.style.backgroundColor = esError ? "#d9534f" : "#4CAF50";
+    
+    toast.className = "show";
+    
+    setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+    }, 3000);
+}
 function supaViaje() {
     fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => {
@@ -150,7 +161,13 @@ function supaViaje() {
             }
             return response.json();
         })
-        .catch(error => console.error("Error obteniendo encomiendas:", error));
+        .then(data =>{
+            showToast("Subido correctamente al servidor.");
+        })
+        .catch(error => {
+            console.error("Error obteniendo encomiendas:", error);
+            showToast("Error al subir los datos", true);
+        });
 }
 function obtenerEncomiendas() {
     fetch(`php/informacion/infoEnco.php?viaje=${encodeURIComponent(viaje)}`)

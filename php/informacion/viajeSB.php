@@ -2,6 +2,8 @@
     include '../conexion.php';
     include '../supabase.php';
 
+    set_time_limit(300);
+
     $sb = new SupabaseClient();
 
     $code = $_GET['viaje'] ?? '';
@@ -31,6 +33,7 @@
     $stmtE->execute();
     $resultE = $stmtE->get_result();
 
+    $datosParaSubir = [];
     while ($rowE = $resultE->fetch_assoc()) {
         $total = 0;
         if ($rowE['estadoPaga'] == 1 || $rowE['estadoPaga'] == 2) {
@@ -43,15 +46,20 @@
             $total = $rowE['total'];
         }
         $cons = (strlen($rowE['consignatario']) < 5) ? $rowE['remitente'] : $rowE['consignatario'];
-        $telf = ($rowE['conTelf'] != 0) ?  $rowE['conTelf'] : $rowE['remTelf'];
-        $sb->insert('encomiendabodega', [
+        $telf = (strlen($rowE['conTelf']) > 7) ?  $rowE['conTelf'] : $rowE['remTelf'];
+
+        $datosParaSubir[] = [
             'conEnc'        => $rowE['conEnc'],
             'viajeCod'      => $rowE['codeViaje'],
             'consignatario' => $cons,
             'conTelf'       => $telf,
             'total'         => $total,
             'estadoPaga'    => $rowE['estadoPaga']
-        ]);
+        ];
+
+        if(!empty($datosParaSubir)) {
+            $sb->insert('encomiendabodega', $datosParaSubir);
+        }
     }
     echo json_encode(["status" => "success", "message" => "Sincronización completada"]);    
 ?>
