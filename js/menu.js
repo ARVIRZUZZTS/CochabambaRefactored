@@ -30,13 +30,77 @@ document.addEventListener('DOMContentLoaded', () => {
             dia = dateStr;
             localStorage.setItem("dia",dia);
             console.log("Fecha seleccionada: " + dia);
-            obtenerViajes(dia);
+            setPanel();
         }
     });
-
-    obtenerViajes(dia);
-    document.getElementById("titleEncomiendas").textContent = "BUSES de " + zona;
+    setPanel();
 });
+
+function setPanel(){
+    let boxi = document.getElementById("all");
+    boxi.innerHTML = `
+        <div id="titulo">
+            <h1 id="titleEncomiendas">Buses de ${zona}</h1>
+            <button id="viajeEncomiendass" onclick="setLlegada()">LLEGADA</button>
+        </div>
+        <div id="encomiendas">
+            <div class="titleMenu">
+                <h3 class="placH3">Placa</h3>
+                <h3 class="destH3">Destino</h3>
+                <h3 class="chofH3">Chofer</h3>
+                <h3 class="infoH3">Información</h3>
+            </div>
+            <div id="encBox"></div>
+            <button id="addBut" onclick="goAddBus()">AGREGAR ENVIO</button>
+        </div>
+    `;
+    obtenerViajes(dia);
+}
+
+function setLlegada(){
+    let boxi = document.getElementById("all");
+
+    boxi.innerHTML = `
+        <div id="titulo">
+            <h1 id="titleEncomiendas">Llegada</h1>
+            <button id="viajeEncomiendass" onclick="setPanel()">Atras</button>
+        </div>
+        <div id="encomiendas">
+            <div class="titleLlegada">
+                <h3 class="placLl3">Placa</h3>
+                <h3 class="infoLl3">Información</h3>
+            </div>
+            <div id="encBox">
+                <div id="listaLlegada">Cargando...</div>
+            </div>            
+            <button id="addBut" onclick="goAddBus()">AGREGAR ENVIO</button>
+        </div>
+    `;
+    fetch("php/menu/llegadaSB.php", {
+        method: "POST",
+        body: new URLSearchParams({
+            zona: localStorage.getItem("zona"),
+            dia: localStorage.getItem("dia")
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let lista = document.getElementById("listaLlegada");
+        lista.innerHTML = "";
+        if(data.data.legth === 0) {
+            lista.innerHTML = "<p>No hay viajes pendientes.</p>";
+            return;
+        }
+        data.data.forEach(viaje => {
+            lista.innerHTML += `
+                <div class="llegada-item">
+                    <p class="llegadaPlaca">${viaje.placa}</p>
+                    <button id="llegadaInfo" onclick="infoLlegada('${viaje.viajeCod}')">Info</button>
+                </div>
+            `;
+        });
+    })
+}
 
 function obtenerViajes(fecha) {
     let aux = zona.trim();
@@ -79,6 +143,10 @@ function obtenerViajes(fecha) {
 function info(code){
     localStorage.setItem("viajeL", code);
     window.location = "informacion.html";
+}
+function infoLlegada(code){
+    localStorage.setItem("viajeLlegada", code);
+    window.location = "llegada.html";
 }
 function listas() {
     window.location = "configuracion.html";

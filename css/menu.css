@@ -82,6 +82,7 @@ main {
     width: 100%;
     box-sizing: border-box;
 }
+
 .titleMenu h3 {
     margin: 0px;
 }
@@ -102,6 +103,20 @@ main {
 .infoH3 {
     width: 16%;
 }
+.titleLlegada {
+    display: flex;
+    justify-content: space-between;
+    font-size: large;
+    background-color: rgba(255, 255, 255, 0.705);
+    padding: 10px 20%;
+    border-radius: 10px;
+    margin: 10px 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.titleLlegada h3 {
+    margin: 0px;
+}
 #encBox {
     display: flex;
     flex-direction: column;
@@ -118,6 +133,17 @@ main {
     text-align: center;
     width: 100%;
     padding: 0px;
+    margin: 2px 0px 2px 0px;
+}
+#listaLlegada {
+    width: 100%;    
+}
+.llegada-item {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    width: 58%;
+    padding-left: 18%;
     margin: 2px 0px 2px 0px;
 }
 .viaje-item p {

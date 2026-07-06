@@ -13,6 +13,44 @@ class SupabaseClient {
     public function insert($tabla, $data) {
         return $this->request('POST', $tabla, $data);
     }
+    public function get($url) {
+    $ch = curl_init($url);
+    $headers = [
+        'apikey: ' . $this->apiKey,
+        'Authorization: Bearer ' . $this->apiKey
+    ];
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200) {
+        error_log("Error Supabase $httpCode en URL: $url");
+        return []; 
+    }
+    
+    return json_decode($response, true);
+}
+    public function update($tabla, $data, $filtro) {
+        $ch = curl_init($this->url . "/" . $tabla . "?" . $filtro);
+        $headers = [
+            'Content-Type: application/json',
+            'apikey: ' . $this->apiKey,
+            'Authorization: Bearer ' . $this->apiKey,
+            'Prefer: return=representation'
+        ];
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($response, true);
+    }
     private function request($metodo, $tabla, $data = null) {
         $ch = curl_init($this->url . "/" . $tabla);
         $headers = [
