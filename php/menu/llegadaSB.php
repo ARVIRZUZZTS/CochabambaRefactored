@@ -21,8 +21,8 @@ if (is_array($viajes)) {
         error_log("Encomiendas para " . $v['viajeCod'] . ": " . json_encode($encomiendas));
 
         foreach ($encomiendas as $e) {
-            $stmtE = $conexion->prepare("INSERT IGNORE INTO encomiendabodega (conEnc, viajeCod, consignatario, conTelf, total) VALUES (?, ?, ?, ?, ?)");
-            $stmtE->bind_param("ssssi", $e['conEnc'], $e['viajeCod'], $e['consignatario'], $e['conTelf'], $e['total']);
+            $stmtE = $conexion->prepare("INSERT IGNORE INTO encomiendabodega (conEnc, viajeCod, consignatario, conTelf, bulto, estadoPaga, total) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmtE->bind_param("ssssssi", $e['conEnc'], $e['viajeCod'], $e['consignatario'], $e['conTelf'], $e['bulto'], $e['estadoPaga'], $e['total']);
             $stmtE->execute();
         }
 
