@@ -26,7 +26,7 @@
         ]);
     }
 
-    $sqlE = "SELECT conEnc, codeViaje, remitente, remTelf, consignatario, conTelf, estadoPaga, priT, segT, total
+    $sqlE = "SELECT conEnc, codeViaje, remitente, remTelf, consignatario, conTelf, bulto, estadoPaga, priT, segT, total
             FROM encomienda WHERE codeViaje = ?";
     $stmtE = $conexion->prepare($sqlE);
     $stmtE->bind_param("s", $code);
@@ -54,6 +54,7 @@
             'consignatario' => $cons,
             'conTelf'       => $telf,
             'total'         => $total,
+            'bulto'         => $rowE['bulto'],
             'estadoPaga'    => $rowE['estadoPaga']
         ];
 
