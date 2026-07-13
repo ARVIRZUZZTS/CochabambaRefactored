@@ -4,7 +4,6 @@ const viaje = localStorage.getItem("viajeLlegada");
 let placa = "";
 let origen = "";
 let destino = "";
-let abrevOrg = "";
 let abrevDes = "";
 
 let hora = horaAct();
@@ -13,19 +12,9 @@ let totalGlobal = 0;
 let porPagar = 0;
 let cancelado = 0;
 
-let tramo1C = 0;
-let tramo1PP = 0;
-let tramo2C = 0;
-let tramo2PP = 0;
-
 let espV = 0;
 function back() {
     window.location = "menu.html";
-}
-
-function crear() {
-    localStorage.setItem("encDest", destino);
-    window.location = "encomienda.html";
 }
 
 document.addEventListener("DOMContentLoaded", function () {destino
@@ -41,30 +30,26 @@ function cargarDatos() {
             console.log(viajeData);
             placa = viajeData.placa ? viajeData.placa.trim() : "Sin placa";
             
-            //origen = viajeData.origen.trim();
-            //destino = viajeData.destino.trim();
+            if (viaje.substring(0, 2) == 'SC') {
+                destino = 'Cochabamba';
+            } else if (viaje.substring(0, 2) == 'CB') {
+                destino = 'Santa Cruz';
+            } else if (viaje.substring(0, 2) == 'MN') {
+                destino = 'Montero';
+            } else {
+                destino = 'Otro';
+            }
+            document.getElementById("viTk").textContent = `Llegada de: ${destino}`;
+            document.getElementById("fcTk").textContent = `Fecha de creación: ${fecha}`;
             
-            fetch(`php/informacion/abreviaciones.php?origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}`)
-                .then(response => response.json())
-                .then(abrevData => {
-                    abrevOrg = abrevData.abrevOrigen;
-                    abrevDes = abrevData.abrevDestino;
-                    document.getElementById("viTk").textContent = `Viaje: ${abrevOrg} a ${destino}`;
-                    
-                }).catch(error => {
-                    console.error("Error al cargar abreviaciones:", error);
-                });
-
             obtenerEncomiendas();
             
             document.getElementById("infoH1").textContent = `Informacion de la Llegada: ${viaje}`;
             document.getElementById("plTit").textContent = `Placa: ${placa}`;
-            document.getElementById("orTit").textContent = `Origen: ${origen}`;
-            document.getElementById("deTit").textContent = `Destino: ${destino}`;
+            document.getElementById("llTit").textContent = `Llegada de: ${destino}`;
             document.getElementById("feTit").textContent = `Fecha: ${fecha}`;
 
             document.getElementById("cdTk").textContent = `Código: ${viaje}`;
-            document.getElementById("fcTk").textContent = `Fecha de creación: ${fecha}`;
             document.getElementById("plTk").textContent = `Placa: ${placa}`;
             document.getElementById("horaP").textContent = `Hora: ${hora}`;  
             setZona();
@@ -87,13 +72,11 @@ function cargarTitulos(){
         <h2 id="tt">T</h2>
         <h2 id="num">N°</h2>
         <h2 id="con">Consignatario</h2>
-        <h2 id="ci">Ci</h2>
         <h2 id="det">Detalle</h2>
         <h2 id="cel">Cel</h2>
     `;
     titulos.innerHTML += `
         <h2>Total</h2>
-        <h2>Imprimir</h2>
     `;
     titulosTicket.innerHTML += `
         <h2 id="fe">Fecha</h2>
@@ -136,24 +119,24 @@ function obtenerEncomiendas() {
             let res = document.getElementById("resumen");
             let pagosBox = document.getElementById("pagos");
             let pagosFoo = document.getElementById("pagosFoo");
-            console.log(abrevOrg, abrevDes);
+            console.log(abrevDes);
             
             contenedor.innerHTML = "";
             listEnco.innerHTML = "";
-            let viajeEnco = `Viaje de ${abrevOrg} a ${abrevDes}`;
+            let viajeEnco = `Llegada de ${destino}`;
             res.innerHTML = `
                 <img id="imgPr3" src="img/logXXF.png" alt="">
                 <h3 id="titu">LIQ. ENC. PXP</h3>
                 <h3>${viajeEnco}</h3>
-                <h3>Placa: ${placa}</h3>    
+                <h3>Placa: ${placa}</h3>
                 <div id="fechHR">
                     <h3>Fecha: ${fecha}</h3>
                     <h3>Hora: ${horaAct()}</h3>
                 </div>
                 <div id="titRes">
                     <h3>N°</h3>
-                    <h3>Paga</h3>
                     <h3>Total</h3>
+                    <h3>Firma</h3>
                 </div>
                 <div id="listR"></div>                
             `;
@@ -193,22 +176,20 @@ function obtenerEncomiendas() {
                 let estadoPagaClass = "";
                 let estadoPagaTexto = "";
                 
+                if (encomienda.estadoPaga != '1') {
+                    listRes.innerHTML = `
+                        <h4>${maxConEnc}</h4>
+                        <h4>${encomienda.total}</h4>
+                        <h4></h4>
+                    `;
+                }                
+
                 if (encomienda.estadoPaga.trim() == "1") {
                     estadoPagaTexto = "Cancelado";
-                    estadoPagaClass = "";
-                    listRes.innerHTML = `
-                        <h4>${maxConEnc}</h4>
-                        <h4>C</h4>
-                        <h4>${encomienda.total}</h4>
-                    `;
+                    estadoPagaClass = "";                    
                 } else {
                     estadoPagaTexto = "Por Pagar";
-                    estadoPagaClass = " class=\"xp\"";
-                    listRes.innerHTML = `
-                        <h4>${maxConEnc}</h4>
-                        <h4>PxP</h4>
-                        <h4>${encomienda.total}</h4>
-                    `;
+                    estadoPagaClass = " class=\"xp\"";                    
                 }
                 encomiendaHTML += `
                     <textarea ${estadoPagaClass} readonly>${estadoPagaTexto}</textarea>
@@ -223,7 +204,6 @@ function obtenerEncomiendas() {
                     <h3 class="ttc"></h3>
                     <h3 class="conE">${maxConEnc}</h3>
                     <h3 class="consg">${encomienda.consignatario}</h3>
-                    <h3 class="ci"></h3>
                     ${bultosMax}
                     <h3 class="cel">${telfImp}</h3>
                 `;
@@ -263,9 +243,7 @@ function obtenerEncomiendas() {
                 <h2 id="total">Total: ${totalGlobal.toFixed(2)} Bs</h2>
             `;
             res.innerHTML += `
-                <h3 class="pag" id="porPagarR">Por Pagar: ${porPagar.toFixed(2)} Bs</h3>
-                <h3 class="pag" id="canceladoR">Cancelado: ${cancelado.toFixed(2)} Bs</h3>
-                <h3 class="pag" id="totalR">Total: ${totalGlobal.toFixed(2)} Bs</h3>
+                <h3 class="pag" id="porPagarR">Por Pagar: ${porPagar.toFixed(2)} Bs</h3>                
             `;
             res.innerHTML += `                
                 <div id="spaceRes"></div>
@@ -276,123 +254,8 @@ function obtenerEncomiendas() {
         .catch(error => console.error("Error obteniendo encomiendas:", error));
 }
 
-function imprimir(conEnc) {
-    fetch(`php/diarios/getEncDiaPrint.php?conEnc=${conEnc}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Error al obtener los datos de la encomienda");
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success && data.encomienda) {
-            const abrev = data.encomienda.conEnc.split('-')[1];
-            fetch(`php/diarios/zonaGet.php?abrev=${abrev}`)
-            .then(r => r.json())
-            .then(zona => {
-                let direccion = zona.informacion;
-                let telefonos = zona.telefono;
-
-                let textVD = data.encomienda.valDeclarado == "Si" ? "" : " SIN DINERO NI OBJETOS DE VALOR";
-                let txtpp = data.encomienda.estadoPaga == "1" ? "Total Pagado" : "Total Por Pagar";
-
-                let destinoAux = zona.nombreZona;
-                
-                let txtpagar = "";
-
-                if (data.encomienda.destino.trim() == "Santa Cruz" && data.encomienda.destino.trim() == "Cochabamba" && data.encomienda.destino.trim() == "Montero") {
-                    if (data.encomienda.estadoPaga == "1") {
-                        txtpagar = "GUIA PAGADA EN ORIGEN";
-                    } else {
-                        txtpagar = "GUIA PxP EN DESTINO";
-                    }
-                } else {
-                    if (data.encomienda.estadoPaga == "1") {
-                        txtpagar = "GUIA PAGADA EN ORIGEN";
-                    } else if (data.encomienda.estadoPaga == "2") {
-                        txtpagar = "GUIA PxP EN DESTINO";
-                    } else {
-                        txtpagar = "";
-                    }
-                }
-
-                document.getElementById("boletin").innerHTML = `
-                    <img id="imgPr2" src="img/logXXF.png" alt="">
-                    <p>${direccion} Telf: ${telefonos}</p>
-                    <h1>${txtpagar}</h1>
-                    <div id="impDiv2">
-                        <h1 id="guia"><strong>Guia N°:</strong> ${data.encomienda.conEnc}</h1>
-                        <div id="dat2">
-                            <h1><strong>Fecha:</strong> ${data.encomienda.fecha}</h1>
-                            <h2><strong>Hora Emision:</strong>${hora}</h2>
-                        </div>
-                        <h2>Origen: ${data.encomienda.origen.toUpperCase()}</h2>
-                        <h2 class="destinos">Destino: ${destinoAux.toUpperCase()}</h2>
-                        <h2><strong>Remitente:</strong> ${data.encomienda.remitente} (${data.encomienda.remTelf})</h2>
-                        <h2><strong>Consignatario:</strong> ${data.encomienda.consignatario} (${data.encomienda.conTelf})</h2>
-                        <h2><strong>Detalle:</strong> ${data.encomienda.bulto}</h2>
-                `;
-                
-                if (data.encomienda.destino.trim() != "Santa Cruz" && data.encomienda.destino.trim() != "Cochabamba" && data.encomienda.destino.trim() != "Montero") {
-                    if (data.encomienda.estadoPaga == "1") {
-                        document.getElementById("boletin").innerHTML += `
-                            <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
-                            <h2><strong>2° Tramo:</strong> ${data.encomienda.segT}Bs - ${data.encomienda.destino}</h2>
-                        `;
-                    } else if (data.encomienda.estadoPaga == "2") {
-                        document.getElementById("boletin").innerHTML += `
-                            <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
-                            <h2><strong>2° Tramo:</strong> ${data.encomienda.segT}Bs - ${data.encomienda.destino}</h2>
-                        `;
-                    } else if (data.encomienda.estadoPaga == "3") {
-                        document.getElementById("boletin").innerHTML += `
-                            <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
-                            <h2><strong>2° Tramo:</strong> ${data.encomienda.segT}Bs - ${data.encomienda.destino}</h2>
-                        `;
-                    } else if (data.encomienda.estadoPaga == "4") {
-                        document.getElementById("boletin").innerHTML += `
-                            <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
-                            <h2><strong>2° Tramo:</strong> ${data.encomienda.segT}Bs - ${data.encomienda.destino}</h2>
-                        `;
-                    }
-                }
-                document.getElementById("boletin").innerHTML += `
-                        <h1 id="totalPrint"><strong>${txtpp}: </strong> ${data.encomienda.total}Bs</h1>
-                        <br>
-                    </div>
-                    <div id="notaF">
-                        <P>${textVD}</P>
-                        <p>SI SU ENCOMIENDA ES DE VALOR DECLARELA</p>
-                        <p>Nota: No Valido para Crédito Fiscal.</p>
-                    </div>
-                `;
-                const imgElement = document.getElementById('imgPr2');
-                const imgPreload = new Image();
-
-                imgPreload.onload = function () {
-                    imgElement.src = imgPreload.src;
-
-                    document.getElementById('boletin').classList.add('print-visible');
-                    window.print();
-                    document.getElementById('boletin').classList.remove('print-visible');
-                }
-                imgPreload.onerror = function () {
-                    console.warn("No se pudo cargar la imagen, imprimiendo sin ella");
-                    window.print();
-                }
-                imgPreload.src = 'img/logXXF.png';
-
-            })
-        } else {
-            alert("Hubo un problema al obtener los datos de la encomienda para imprimir.");
-        }
-    })
-    .catch(error => console.error("Error obteniendo encomienda para imprimir:", error));      
-}
-
 function printDiv(aux) {
     document.getElementById('ticket').classList.add('print-visible');
-    document.getElementById('boletin').classList.remove('print-visible');
     document.getElementById('resumen').classList.remove('print-visible');
     setSpace(aux);
     window.print();
@@ -433,7 +296,6 @@ function setSpace(aux) {
 function resPrint() {
     document.getElementById('resumen').classList.add('print-visible');
     document.getElementById('ticket').classList.remove('print-visible');
-    document.getElementById('boletin').classList.remove('print-visible');
     print();
     document.getElementById('resumen').classList.remove('print-visible');
 }
@@ -442,4 +304,21 @@ function horaAct() {
     let horas = ahora.getHours().toString().padStart(2, "0");
     let min = ahora.getMinutes().toString().padStart(2, "0");
     return `${horas}:${min}`;
+}
+
+function goExcel() {
+    fetch(`php/llegada/encomiendaLlegada.php?viaje=${encodeURIComponent(viaje)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.forEach(encomienda => {
+                
+            }); 
+            document.getElementById("auxi").textContent = "Despachador"; //+ espV; 
+        })
+        .catch(error => console.error("Error obteniendo encomiendas:", error));
 }

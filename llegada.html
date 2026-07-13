@@ -17,16 +17,15 @@
                 <h1 id="infoH1"></h1>
                 <div>
                     <h2 id="plTit"></h2>
-                    <h2 id="orTit"></h2>
-                    <h2 id="deTit"></h2>
+                    <h2 id="llTit"></h2>
                     <h2 id="feTit"></h2>
                 </div>
                 <div id="butts">
                     <div>
                         <button onclick="printDiv('1')">IMPRIMIR MANIFIESTOS</button>
-                        <button id="crBut" onclick="crear()">CREAR ENCOMIENDA</button>
                         <button onclick="resPrint()">IMPRIMIR RESUMEN</button>
                         <button onclick="printDiv('2')">IMPRIMIR VERTICAL</button>
+                        <button onclick="goExcel()">EXCEL</button>
                     </div>
                     <div>
                         <button onclick="back()">ATRAS</button>
@@ -45,10 +44,8 @@
         <div class="rotated-content">
             <div id="titlesP">
                 <div>
-                    <h3 id="prTk"></h3>
-                    <h3 id="chTk"></h3>
-                    <h3 id="ayTk"></h3>
                     <h3 id="viTk"></h3>
+                    <h3 id="fcTk"></h3>
                 </div>
                 <div>
                     <img id="imgPr" src="img/logXXF.png" alt="">
@@ -56,7 +53,6 @@
                 </div>
                 <div>
                     <h3 id="cdTk"></h3>
-                    <h3 id="fcTk"></h3>
                     <h3 id="plTk"></h3>
                     <h3 id="horaP"><b></b> </h3>
                 </div>
@@ -78,7 +74,6 @@
         </div>
     </div>
 
-    <div id="boletin"></div>
     <div id="resumen"></div>
     <div id="toast"></div>
     <script src="js/llegada.js"></script>

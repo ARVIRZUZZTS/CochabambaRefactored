@@ -68,3 +68,5 @@ Tipos de envio
 1x6 - Numero de Consignatario igual al Remitente (en este caso seria 106, 116, 126, 136, 146, 156 dependiendo del estadoPaga ya que el 6 es lo que indica que los numeros de celular son iguales)
 
 Entonces
+
+copiar diarios.html

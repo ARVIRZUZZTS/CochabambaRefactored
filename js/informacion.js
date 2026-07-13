@@ -37,7 +37,13 @@ function edit() {
 document.addEventListener("DOMContentLoaded", function () {destino
     cargarDatos();
     setH();
+    setServer();
 });
+function setServer() {
+    if (est == 1) {
+        document.getElementById("serverButt").style.backgroundColor = rgb(132, 98, 102);
+    }
+}
 function cargarDatos() {
     fetch(`php/informacion/viajeAll.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => response.json())
@@ -162,6 +168,10 @@ function supaViaje() {
             return response.json();
         })
         .then(data =>{
+            fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
+            .then(response => {
+                if (!response.ok)
+            })
             showToast("Subido correctamente al servidor.");
         })
         .catch(error => {

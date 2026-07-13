@@ -3,7 +3,7 @@
 
     $code = $_GET['viaje'] ?? '';
 
-    $sql = "SELECT * FROM encomiendabodega WHERE viajeCod = ?";
+    $sql = "SELECT conEnc, viajeCod, consignatario, conTelf, total, bulto, estadoPaga FROM encomiendabodega WHERE viajeCod = ?";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("s", $code);
     $stmt->execute();
