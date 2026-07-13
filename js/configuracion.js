@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     usuarios();
 });
 function usuarios() {
-    fetch(`php/configuracion/usuarios.php?filtrar=${zonaL}`)
+    fetch(`php/configuracion/endpoint.php?entity=usuarios&action=list&filtrar=${zonaL}`)
     .then(res => res.json())
     .then(data => {
 
@@ -37,7 +37,7 @@ function usuarios() {
 }
 
 function flotas() {
-    fetch(`php/configuracion/flotas.php`)
+    fetch(`php/configuracion/endpoint.php?entity=flotas&action=list`)
     .then(res => res.json())
     .then(data => {
 
@@ -73,7 +73,7 @@ function flotas() {
 }
 
 function zonas() {
-    fetch(`php/configuracion/zonas.php`)
+    fetch(`php/configuracion/endpoint.php?entity=zonas&action=list`)
     .then(res => res.json())
     .then(data => {
 
@@ -145,7 +145,7 @@ function guardarNuevoUsuario(btn) {
         return;
     }
 
-    fetch(`php/configuracion/newUsuario.php?userR=${encodeURIComponent(user)}&passR=${encodeURIComponent(pass)}&opcion=${encodeURIComponent(zona)}`)
+    fetch(`php/configuracion/endpoint.php?entity=usuarios&action=new&userR=${encodeURIComponent(user)}&passR=${encodeURIComponent(pass)}&opcion=${encodeURIComponent(zona)}`)
     .then(res => res.json())
     .then(data => {
         if (data.status !== "success") {
@@ -190,7 +190,7 @@ function guardarUsuario(btn) {
         return;
     }
 
-    fetch(`php/configuracion/editUser.php?id=${id}&user=${encodeURIComponent(usuario)}`)
+    fetch(`php/configuracion/endpoint.php?entity=usuarios&action=edit&id=${id}&user=${encodeURIComponent(usuario)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -235,7 +235,7 @@ function guardarFlota(btn) {
         return;
     }
 
-    fetch(`php/configuracion/editFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
+    fetch(`php/configuracion/endpoint.php?entity=flotas&action=edit&placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -258,7 +258,7 @@ function guardarNuevaFlota(btn) {
         return;
     }
 
-    fetch(`php/configuracion/newFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
+    fetch(`php/configuracion/endpoint.php?entity=flotas&action=new&placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -275,7 +275,7 @@ function eliminarFlota(btn) {
 
     if (!confirm("¿Seguro que deseas eliminar esta flota?")) return;
 
-    fetch(`php/configuracion/delFlota.php?placa=${encodeURIComponent(placa)}`)
+    fetch(`php/configuracion/endpoint.php?entity=flotas&action=del&placa=${encodeURIComponent(placa)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -292,7 +292,7 @@ function eliminarUsuario(btn) {
 
     if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
 
-    fetch(`php/configuracion/delUser.php?id=${id}`)
+    fetch(`php/configuracion/endpoint.php?entity=usuarios&action=del&id=${id}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -373,7 +373,7 @@ function guardarZona(btn) {
         return;
     }
 
-    fetch(`php/configuracion/editZona.php?zona=${encodeURIComponent(nombre)}&info=${encodeURIComponent(info)}&telefono=${encodeURIComponent(tel)}`)
+    fetch(`php/configuracion/endpoint.php?entity=zonas&action=edit&zona=${encodeURIComponent(nombre)}&info=${encodeURIComponent(info)}&telefono=${encodeURIComponent(tel)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -415,7 +415,7 @@ function guardarNuevaZona(btn) {
         return;
     }
 
-    fetch(`php/configuracion/newZona.php?zona=${encodeURIComponent(nombre)}&abrev=${encodeURIComponent(abrev)}&info=${encodeURIComponent(info)}&telefono=${encodeURIComponent(tel)}`)
+    fetch(`php/configuracion/endpoint.php?entity=zonas&action=new&zona=${encodeURIComponent(nombre)}&abrev=${encodeURIComponent(abrev)}&info=${encodeURIComponent(info)}&telefono=${encodeURIComponent(tel)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -431,7 +431,7 @@ function eliminarZona(btn) {
 
     if (!confirm("¿Seguro que deseas eliminar esta zona?")) return;
 
-    fetch(`php/configuracion/delZona.php?zona=${encodeURIComponent(zona)}`)
+    fetch(`php/configuracion/endpoint.php?entity=zonas&action=del&zona=${encodeURIComponent(zona)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -443,7 +443,7 @@ function eliminarZona(btn) {
 }
 
 function cargarZonas(zonaSeleccionada) {
-    fetch(`php/configuracion/zonasS.php?filtrar=${zonaL}`)
+    fetch(`php/configuracion/endpoint.php?entity=zonas&action=listOne&filtrar=${zonaL}`)
     .then(res => res.json())
     .then(data => {
         const select = document.getElementById("destInp");
@@ -463,8 +463,3 @@ function cargarZonas(zonaSeleccionada) {
     });
 }
 
-
-
-function back() {
-    window.location.href = "menu.html";
-}

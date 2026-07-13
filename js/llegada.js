@@ -13,9 +13,6 @@ let porPagar = 0;
 let cancelado = 0;
 
 let espV = 0;
-function back() {
-    window.location = "menu.html";
-}
 
 document.addEventListener("DOMContentLoaded", function () {destino
     cargarDatos();
@@ -93,17 +90,6 @@ function setZona() {
     if (destino != "Santa Cruz" && destino != "Cochabamba") {
         document.getElementById("destiny").textContent = destino.toUpperCase();
     }
-}
-function showToast(mensaje, esError = false) {
-    const toast = document.getElementById("toast");
-    toast.textContent = mensaje;
-    toast.style.backgroundColor = esError ? "#d9534f" : "#4CAF50";
-    
-    toast.className = "show";
-    
-    setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-    }, 3000);
 }
 function obtenerEncomiendas() {
     fetch(`php/llegada/encomiendaLlegada.php?viaje=${encodeURIComponent(viaje)}`)
@@ -252,58 +238,6 @@ function obtenerEncomiendas() {
             document.getElementById("auxi").textContent = "Despachador"; //+ espV; 
         })
         .catch(error => console.error("Error obteniendo encomiendas:", error));
-}
-
-function printDiv(aux) {
-    document.getElementById('ticket').classList.add('print-visible');
-    document.getElementById('resumen').classList.remove('print-visible');
-    setSpace(aux);
-    window.print();
-    document.getElementById('ticket').classList.remove('print-visible');
-}
-
-function setSpace(aux) {
-    const tick = document.querySelector("#ticket.print-visible");
-    const esp = document.getElementById("espacioBox");
-
-    if (aux !== '1') {
-        tick.style.transform = "rotate(0deg)";
-        return;
-    }
-
-    tick.style.transform = "rotate(180deg)";
-
-    const margins = [
-        "12cm","11.5cm","11cm","10cm","8.5cm","7.5cm","6.5cm","5.5cm","4.5cm","3.5cm",
-        "2.5cm","2cm","1cm","0cm","17cm","16cm","14cm","13cm","12cm","11cm",
-        "10cm","9cm","8cm","7cm","6cm","5cm","4cm","3cm","2cm","2cm",
-        "1cm","0cm","17cm","16cm","14cm","13cm","12cm","11cm","10cm","9cm",
-        "8cm","7cm","6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm",
-        "0cm","17cm","16cm","15cm","14cm","12cm","11cm","10cm","9cm","8cm",
-        "7cm","6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm",
-        "17cm","16cm","15cm","14cm","12cm","11cm","10cm","9cm","8cm","7cm",
-        "6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm","17cm",
-        "16cm","15cm","14cm","13cm","12cm","11cm","10cm","9cm","8cm","7cm",
-        "6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm","16cm",
-        "15cm","14cm","13cm","12cm","11cm","10cm","9cm","8cm","7cm","6cm",
-        "5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm"
-    ];
-
-    esp.style.marginTop = margins[espV] ?? "16cm";
-}
-
-
-function resPrint() {
-    document.getElementById('resumen').classList.add('print-visible');
-    document.getElementById('ticket').classList.remove('print-visible');
-    print();
-    document.getElementById('resumen').classList.remove('print-visible');
-}
-function horaAct() {
-    let ahora = new Date();
-    let horas = ahora.getHours().toString().padStart(2, "0");
-    let min = ahora.getMinutes().toString().padStart(2, "0");
-    return `${horas}:${min}`;
 }
 
 function goExcel() {

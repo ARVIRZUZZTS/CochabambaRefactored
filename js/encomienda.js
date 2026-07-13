@@ -38,7 +38,7 @@ function cambiarCampos() {
     var recio = document.getElementById('recio');
     recio.innerHTML = ``;
     estado.innerHTML = ``;
-    if (dest === "Cochabamba" || dest === "Santa Cruz" || dest == "Montero") {
+    if (esTramo(dest)) {
         recio.innerHTML = `
             <input type="number" id="tot" class="precio" maxlength="10" placeholder="TOTAL">
         `;
@@ -89,7 +89,7 @@ function fin() {
 
     var val = document.getElementById('valorDeclarado').checked ? "Si" : "No";
     var opc = "";
-    if (dest === "Cochabamba" || dest === "Santa Cruz" || dest === "Montero") {
+    if (esTramo(dest)) {
         tot = document.getElementById('tot').value.trim();
         var aux = document.querySelector('input[name="opc"]:checked');
         if (aux.value == "XP") {

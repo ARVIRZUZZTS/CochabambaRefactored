@@ -2,9 +2,6 @@ const dia = localStorage.getItem("dia");
 const code = localStorage.getItem("encomiendaL");
 const zona = localStorage.getItem("zona");
 const encDest = localStorage.getItem("encDest");
-function back(){
-    window.location = "diarios.html";
-}
 document.addEventListener("DOMContentLoaded", function () {
     sety();
     cargarDestinos();
@@ -28,7 +25,7 @@ function sety() {
             <label><input id="valorDeclarado" type="checkbox" name="val" ${checked}> Valor Declarado</label>
         `;
         if (data.estadoPaga.trim() == "1") {
-            if (data.destino.trim() == "Cochabamba" || data.destino.trim() == "Santa Cruz" || data.destino.trim() == "Montero") {
+            if (esTramo(data.destino)) {
                 recio.innerHTML = `
                     <input type="number" id="tot" class="precio" maxlength="10" placeholder="${data.total}">
                 `;
@@ -59,7 +56,7 @@ function sety() {
                 `;
             }
         } else if (data.estadoPaga.trim() == "2") {
-            if (data.destino.trim() == "Cochabamba" || data.destino.trim() == "Santa Cruz" || data.destino.trim() == "Montero") {
+            if (esTramo(data.destino)) {
                 recio.innerHTML = `
                     <input type="number" id="tot" class="precio" maxlength="10" placeholder="${data.total}">
                 `;
@@ -166,7 +163,7 @@ function actu() {
         var opc = "";
         let dest = document.getElementById("dest").value;
         console.log(dest);
-        if (dest === "Cochabamba" || dest === "Santa Cruz" || dest === "Montero") {
+        if (esTramo(dest)) {
             tot = document.getElementById('tot').value.trim() != "" ? document.getElementById('tot').value.trim() : data.total;
             var aux = document.querySelector('input[name="opc"]:checked');
             if (aux.value == "XP") {

@@ -14,9 +14,6 @@ function encomiendaGo(){
     localStorage.setItem("encDest", '-');
     window.location = "encomienda.html";
 }
-function back(){
-    window.location = "menu.html"; 
-}
 function editar(conEnc, destino){
     localStorage.setItem("encDest", destino);
     localStorage.setItem("encomiendaL", conEnc);
@@ -106,7 +103,7 @@ function diarios() {
 
                 let estadoPagaClass = encomienda.estadoPaga.trim() == "1" ? "cancelado" : "xp";
                 let estadoPagaTexto = encomienda.estadoPaga.trim() == "1" ? "Cancelado" : "Por Pagar";
-                if (encomienda.destino.trim() === "Santa Cruz" || encomienda.destino.trim() === "Cochabamba") {
+                if (esTramo(encomienda.destino)) {
                     console.log("nada");
                 } else if (encomienda.destino.trim() === "Montero") {
                     divEncomienda.classList.add("dest-montero");
@@ -129,7 +126,7 @@ function diarios() {
                     `;
                 }
 
-                if (encomienda.destino.trim() != "Santa Cruz" && encomienda.destino.trim() != "Cochabamba" && encomienda.destino.trim() != "Montero") {
+                if (!esTramo(encomienda.destino)) {
                     encomiendaHTML += `
                         <textarea readonly>${encomienda.total} Bs\nT1:${encomienda.priT} T2:${encomienda.segT}</textarea>    
                     `;
@@ -147,7 +144,7 @@ function diarios() {
 
                 cargarPlacas(selectPlacaId, encomienda.destino.trim(), encomienda.conEnc, encomienda.codeViaje);
                 
-                if (encomienda.destino.trim() == "Santa Cruz" || encomienda.destino.trim() == "Cochabamba" || encomienda.destino.trim() == "Montero") {
+                if (esTramo(encomienda.destino)) {
                     if (encomienda.estadoPaga == "1") {
                         cancelado += parseFloat(encomienda.total) || 0;
                     } else if (encomienda.estadoPaga == "2") {
@@ -260,7 +257,7 @@ function imprimir(conEnc) {
                 let destino = zona.nombreZona;
                 let hora = horaAct();
                 let txtpagar = "";
-                if (data.encomienda.destino.trim() == "Santa Cruz" && data.encomienda.destino.trim() == "Cochabamba" && data.encomienda.destino.trim() == "Montero") {
+                if (esTramo(data.encomienda.destino)) {
                     if (data.encomienda.estadoPaga == "1") {
                         txtpagar = "GUIA PAGADA EN ORIGEN";
                     } else {
@@ -292,7 +289,7 @@ function imprimir(conEnc) {
                         <h2><strong>Consignatario:</strong> ${data.encomienda.consignatario} (${data.encomienda.conTelf.trim()})</h2>
                         <h2><strong>Detalle:</strong> ${data.encomienda.bulto}</h2>
                 `;
-                if (data.encomienda.destino.trim() != "Santa Cruz" && data.encomienda.destino.trim() != "Cochabamba" && data.encomienda.destino.trim() != "Montero") {
+                if (!esTramo(data.encomienda.destino)) {
                     if (data.encomienda.estadoPaga == "1") {
                         document.getElementById("print").innerHTML += `
                             <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
@@ -349,11 +346,4 @@ function imprimir(conEnc) {
         }
     })
     .catch(error => console.error("Error al obtener los datos:", error));
-}
-
-function horaAct() {
-    let ahora = new Date();
-    let horas = ahora.getHours().toString().padStart(2, "0");
-    let min = ahora.getMinutes().toString().padStart(2, "0");
-    return `${horas}:${min}`;
 }

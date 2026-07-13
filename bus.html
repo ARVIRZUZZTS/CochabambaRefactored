@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="but">
-                <button type="button" onclick="back()" id="canc">Cancelar</button>
+                <button type="button" onclick="back('menu.html')" id="canc">Cancelar</button>
                 <button type="button" onclick="fin()">Crear Viaje</button>
             </div>
             <p id="msgVia">Llene los campos (ayudantes puede estar vacio).</p>
@@ -43,5 +43,7 @@
         <datalist id="choflist"></datalist>
     </main>
     <div id="toast"></div>
+    <script src="js/helpers.js"></script>
+    <script src="js/viaje-helpers.js"></script>
     <script src="js/bus.js"></script>
 </body>

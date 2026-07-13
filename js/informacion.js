@@ -22,9 +22,6 @@ let tramo2C = 0;
 let tramo2PP = 0;
 
 let espV = 0;
-function back() {
-    window.location = "menu.html";
-}
 
 function crear() {
     localStorage.setItem("encDest", destino);
@@ -148,17 +145,6 @@ function setZona() {
         document.getElementById("destiny").textContent = destino.toUpperCase();
     }
 }
-function showToast(mensaje, esError = false) {
-    const toast = document.getElementById("toast");
-    toast.textContent = mensaje;
-    toast.style.backgroundColor = esError ? "#d9534f" : "#4CAF50";
-    
-    toast.className = "show";
-    
-    setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-    }, 3000);
-}
 function supaViaje() {
     fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => {
@@ -168,10 +154,12 @@ function supaViaje() {
             return response.json();
         })
         .then(data =>{
-            fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
-            .then(response => {
-                if (!response.ok)
-            })
+            //fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
+            //.then(response => {
+            //    if (!response.ok
+            //        
+            //    )
+            //})
             showToast("Subido correctamente al servidor.");
         })
         .catch(error => {
@@ -255,7 +243,7 @@ function obtenerEncomiendas() {
                 let estadoPagaClass = "";
                 let estadoPagaTexto = "";
                 
-                if (encomienda.destino.trim() == "Santa Cruz" || encomienda.destino.trim() == "Cochabamba" || encomienda.destino.trim() == "Montero") {
+                if (esTramo(encomienda.destino)) {
 
                     if (encomienda.estadoPaga.trim() == "1") {
                         estadoPagaTexto = "Cancelado";
@@ -343,10 +331,10 @@ function obtenerEncomiendas() {
                     ${bultosMax}
                     <h3 class="cel">${telfImp}</h3>
                 `;
-                if (destino == "Santa Cruz" || destino == "Cochabamba" || destino == "Montero") {
+    if (esTramo(destino)) {
                     let pagoC = "";
                     let pagoPP = "";
-                    if (encomienda.destino == "Santa Cruz" || encomienda.destino == "Cochabamba" || encomienda.destino == "Montero") {
+                    if (esTramo(encomienda.destino)) {
                         if (encomienda.estadoPaga == "1") {
                             pagoC = encomienda.total;
                             pagoPP = "0";
@@ -457,7 +445,7 @@ function obtenerEncomiendas() {
                 listEnco.appendChild(listImp);
                 
             }); 
-            if (destino.trim() == "Santa Cruz" || destino.trim() == "Cochabamba" || destino.trim() == "Montero") {
+            if (esTramo(destino)) {
                 console.log("entra??");
                 pagosBox.innerHTML = `
                     <h2 id="porPagarPrint">Por Pagar: ${porPagar.toFixed(2)} Bs</h2>
@@ -525,7 +513,7 @@ function imprimir(conEnc) {
                 let hora = horaAct();
                 let txtpagar = "";
 
-                if (data.encomienda.destino.trim() == "Santa Cruz" && data.encomienda.destino.trim() == "Cochabamba" && data.encomienda.destino.trim() == "Montero") {
+                if (esTramo(data.encomienda.destino)) {
                     if (data.encomienda.estadoPaga == "1") {
                         txtpagar = "GUIA PAGADA EN ORIGEN";
                     } else {
@@ -558,7 +546,7 @@ function imprimir(conEnc) {
                         <h2><strong>Detalle:</strong> ${data.encomienda.bulto}</h2>
                 `;
                 
-                if (data.encomienda.destino.trim() != "Santa Cruz" && data.encomienda.destino.trim() != "Cochabamba" && data.encomienda.destino.trim() != "Montero") {
+                if (!esTramo(data.encomienda.destino)) {
                     if (data.encomienda.estadoPaga == "1") {
                         document.getElementById("boletin").innerHTML += `
                             <h2><strong>1° Tramo:</strong> ${data.encomienda.priT}Bs - Santa Cruz</h2>
@@ -615,59 +603,6 @@ function imprimir(conEnc) {
     .catch(error => console.error("Error obteniendo encomienda para imprimir:", error));      
 }
 
-function printDiv(aux) {
-    document.getElementById('ticket').classList.add('print-visible');
-    document.getElementById('boletin').classList.remove('print-visible');
-    document.getElementById('resumen').classList.remove('print-visible');
-    setSpace(aux);
-    window.print();
-    document.getElementById('ticket').classList.remove('print-visible');
-}
-
-function setSpace(aux) {
-    const tick = document.querySelector("#ticket.print-visible");
-    const esp = document.getElementById("espacioBox");
-
-    if (aux !== '1') {
-        tick.style.transform = "rotate(0deg)";
-        return;
-    }
-
-    tick.style.transform = "rotate(180deg)";
-
-    const margins = [
-        "12cm","11.5cm","11cm","10cm","8.5cm","7.5cm","6.5cm","5.5cm","4.5cm","3.5cm",
-        "2.5cm","2cm","1cm","0cm","17cm","16cm","14cm","13cm","12cm","11cm",
-        "10cm","9cm","8cm","7cm","6cm","5cm","4cm","3cm","2cm","2cm",
-        "1cm","0cm","17cm","16cm","14cm","13cm","12cm","11cm","10cm","9cm",
-        "8cm","7cm","6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm",
-        "0cm","17cm","16cm","15cm","14cm","12cm","11cm","10cm","9cm","8cm",
-        "7cm","6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm",
-        "17cm","16cm","15cm","14cm","12cm","11cm","10cm","9cm","8cm","7cm",
-        "6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm","17cm",
-        "16cm","15cm","14cm","13cm","12cm","11cm","10cm","9cm","8cm","7cm",
-        "6cm","5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm","16cm",
-        "15cm","14cm","13cm","12cm","11cm","10cm","9cm","8cm","7cm","6cm",
-        "5cm","4cm","3cm","2cm","2cm","1cm","0cm","0cm"
-    ];
-
-    esp.style.marginTop = margins[espV] ?? "16cm";
-}
-
-
-function resPrint() {
-    document.getElementById('resumen').classList.add('print-visible');
-    document.getElementById('ticket').classList.remove('print-visible');
-    document.getElementById('boletin').classList.remove('print-visible');
-    print();
-    document.getElementById('resumen').classList.remove('print-visible');
-}
-function horaAct() {
-    let ahora = new Date();
-    let horas = ahora.getHours().toString().padStart(2, "0");
-    let min = ahora.getMinutes().toString().padStart(2, "0");
-    return `${horas}:${min}`;
-}
 function eliminar() {
     if (!confirm("¿Estás seguro de que deseas eliminar este Viaje?")) {
         return; 
