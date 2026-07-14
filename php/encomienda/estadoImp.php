@@ -1,7 +1,7 @@
 <?php
     include '../conexion.php';
 
-    $codigo = $_GET['viajeCod'];
+    $codigo = $_GET['viaje'];
     
     $sql = "UPDATE viaje SET estadoImp = '1' WHERE viajeCod = ?";
     $stmt = $conexion->prepare($sql);

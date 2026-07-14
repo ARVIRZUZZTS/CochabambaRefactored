@@ -167,12 +167,17 @@ function supaViaje() {
             }
             return response.json();
         })
-        .then(data =>{
-            fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
+        .then(() =>{
+            return fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
             .then(response => {
-                if (!response.ok)
+                if (!response.ok) {
+                    throw new Error("Error al actualizar estado de impresion");
+                }
+                return response.text();
             })
-            showToast("Subido correctamente al servidor.");
+            .then(result => {
+                showToast("Subido correctamente al servidor");
+            })
         })
         .catch(error => {
             console.error("Error obteniendo encomiendas:", error);
