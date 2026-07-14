@@ -1,0 +1,24 @@
+{
+    "name": "virzu/cochabamba-refactored",
+    "autoload": {
+        "psr-4": {
+            "Virzu\\CochabambaRefactored\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ARVIRZUZZTS",
+            "email": "virzuzz12345@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "1.8.2"
+    },
+    "config": {
+        "policy": {
+            "advisories": {
+                "block": false
+            }
+        }
+    }
+}

@@ -307,18 +307,16 @@ function horaAct() {
 }
 
 function goExcel() {
-    fetch(`php/llegada/encomiendaLlegada.php?viaje=${encodeURIComponent(viaje)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error en la respuesta del servidor");
-            }
-            return response.json();
-        })
-        .then(data => {
-            data.forEach(encomienda => {
-                
-            }); 
-            document.getElementById("auxi").textContent = "Despachador"; //+ espV; 
-        })
-        .catch(error => console.error("Error obteniendo encomiendas:", error));
+    showToast("Generando Excel...", false);
+
+    const link = document.createElement('a');
+    link.href = `php/llegada/generarExcel.php?viaje=${encodeURIComponent(viaje)}&destino=${encodeURIComponent(destino)}`;
+    link.target = '_blank';
+    link.download = `${viaje}.xlsx`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast("Excel generado exitosamente", false);
 }
