@@ -144,12 +144,13 @@ try {
         $sheet->setCellValue('J3', 'RESUMEN');
         $sheet->getStyle('J3')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('J3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->setCellValue('J4', 'Total Encomiendas:');
-        $sheet->setCellValue('K4', count($encomiendas));
-        $sheet->setCellValue('J5', 'Total General:');
-        $sheet->setCellValue('K5', $totalGeneral);
+        $sheet->setCellValue('J4', 'Total General:');
+        $sheet->setCellValue('K4', "=SUM(D4:D{$ultimaFila})");
+        $sheet->getStyle('K4')->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->setCellValue('J5', 'Total Pagado:');
+        $sheet->setCellValue('K5', "=SUMIF(G4:G{$ultimaFila},\"☑\",D4:D{$ultimaFila})");
         $sheet->getStyle('K5')->getNumberFormat()->setFormatCode('#,##0.00');
-        $sheet->setCellValue('J6', 'Saldo Pendiente:');
+        $sheet->setCellValue('J6', 'Rezagado:');
         $sheet->setCellValue('K6', "=H{$filaTotal}");
         $sheet->getStyle('K6')->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->getStyle('J3:K6')->applyFromArray($resumenStyle);
