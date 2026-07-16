@@ -7,6 +7,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
 
 try {
     include '../conexion.php';
@@ -47,13 +49,18 @@ try {
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
+    $spreadsheet->getDefaultStyle()->getFont()->setName('Bahnschrift SemiBold')->setSize(12);
+
     $sheet->setTitle(substr($viajeCod, 0, 31));
 
     $sheet->setCellValue('A1', 'Placa: ' . ($viajeData['placa'] ?? 'N/A'));
-    $sheet->setCellValue('C1', 'Fecha: ' . ($viajeData['fecha'] ?? '/'));
-    $sheet->setCellValue('E1', 'Llegada de: ' . ($destino ?? 'N/A'));
+    $sheet->setCellValue('B1', 'Llegada de: ' . ($destino ?? 'N/A'));
+    $sheet->setCellValue('E1', 'Fecha: ' . ($viajeData['fecha'] ?? '/'));
+    $sheet->getStyle('A1:H1')->getFont()->setSize(14)->setBold(true);
+    $sheet->getRowDimension(1)->setRowHeight(30);
+    $sheet->getRowDimension(3)->setRowHeight(25);
 
-    $headers = ['Encomienda', 'Consignatario', 'Teléfono', 'Total (Bs)', 'Estado', 'Fecha Pago'];
+    $headers = ['Encomienda', 'Consignatario', 'Teléfono', 'Total (Bs)', 'Estado', 'Fecha Pago', 'Pagado?', 'Saldo'];
     $columna = 'A';
     foreach ($headers as $header) {
         $sheet->setCellValue($columna . '3', $header);
@@ -61,12 +68,12 @@ try {
     }
 
     $headerStyle = [
-        'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+        'font' => ['bold' => true, 'size' => 14, 'color' => ['rgb' => 'FFFFFF']],
         'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
         'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
         'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
     ];
-    $sheet->getStyle('A3:F3')->applyFromArray($headerStyle);
+    $sheet->getStyle('A3:H3')->applyFromArray($headerStyle);
 
     $fila = 4;
     $filaCheckbox = 4;
@@ -78,26 +85,25 @@ try {
         $sheet->setCellValue('D' . $fila, $enco['total']);
         $sheet->getStyle('D' . $fila)->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->setCellValue('E' . $fila, 'Por Pagar');
-        $sheet->setCellValue('F' . $fila, '');
+        $sheet->setCellValue('F' . $fila, "=IF(G{$filaCheckbox}=\"☑\",NOW(),\"\")");
+        $sheet->getStyle('F' . $fila)->getNumberFormat()->setFormatCode('yyyy-mm-dd hh:mm');
 
-        $validation = $sheet->getCell('J' . $filaCheckbox)->getDataValidation();
+        $validation = $sheet->getCell('G' . $filaCheckbox)->getDataValidation();
         $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
         $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
         $validation->setAllowBlank(false);
         $validation->setShowInputMessage(true);
         $validation->setShowErrorMessage(true);
         $validation->setShowDropDown(true);
-        $validation->setFormula1('"No,Si"');
-        $validation->setPromptTitle('Estado de Pago');
-        $validation->setPrompt('Selecciona Si para marcar como pagado');
+        $validation->setFormula1('"☐,☑"');
+        $validation->setPromptTitle('Pagado?');
+        $validation->setPrompt('Selecciona ☑ para marcar como pagado');
         $validation->setErrorTitle('Entrada inválida');
-        $validation->setError('Selecciona Si o No');
+        $validation->setError('Selecciona ☐ o ☑');
 
-        $sheet->setCellValue('J' . $filaCheckbox, 'No');
-        $sheet->setCellValue('K' . $filaCheckbox, "=IF(J{$filaCheckbox}=\"Si\",0,D{$fila})");
-        $sheet->getStyle('K' . $filaCheckbox)->getNumberFormat()->setFormatCode('#,##0.00');
-        $sheet->setCellValue('L' . $filaCheckbox, "=IF(J{$filaCheckbox}=\"Si\",NOW(),\"\")");
-        $sheet->getStyle('L' . $filaCheckbox)->getNumberFormat()->setFormatCode('yyyy-mm-dd hh:mm');
+        $sheet->setCellValue('G' . $filaCheckbox, '☐');
+        $sheet->setCellValue('H' . $filaCheckbox, "=IF(G{$filaCheckbox}=\"☑\",0,D{$fila})");
+        $sheet->getStyle('H' . $filaCheckbox)->getNumberFormat()->setFormatCode('#,##0.00');
 
         $fila++;
         $filaCheckbox++;
@@ -106,47 +112,77 @@ try {
     $filaTotal = $fila;
 
     if (count($encomiendas) > 0) {
+        $ultimaFila = $fila - 1;
+        $rangeG = 'G4:G' . $ultimaFila;
+
+        $condPaid = new Conditional();
+        $condPaid->setConditionType(Conditional::CONDITION_CELLIS);
+        $condPaid->setOperatorType(Conditional::OPERATOR_EQUAL);
+        $condPaid->addCondition('"☑"');
+        $condPaid->getStyle()->getFont()->getColor()->setARGB('FF00B050');
+        $condPaid->getStyle()->getFont()->setBold(true);
+
+        $condUnpaid = new Conditional();
+        $condUnpaid->setConditionType(Conditional::CONDITION_CELLIS);
+        $condUnpaid->setOperatorType(Conditional::OPERATOR_EQUAL);
+        $condUnpaid->addCondition('"☐"');
+        $condUnpaid->getStyle()->getFont()->getColor()->setARGB('FF999999');
+
+        $sheet->getStyle($rangeG)->setConditionalStyles([$condPaid, $condUnpaid]);
         $sheet->setCellValue('A' . $filaTotal, 'TOTALES');
         $sheet->getStyle('A' . $filaTotal)->getFont()->setBold(true);
         $sheet->setCellValue('D' . $filaTotal, "=SUM(D4:D" . ($fila-1) . ")");
         $sheet->getStyle('D' . $filaTotal)->getNumberFormat()->setFormatCode('#,##0.00');
-        $sheet->setCellValue('K' . $filaTotal, "=SUM(K4:K" . ($filaCheckbox-1) . ")");
-        $sheet->getStyle('K' . $filaTotal)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->setCellValue('H' . $filaTotal, "=SUM(H4:H" . ($filaCheckbox-1) . ")");
+        $sheet->getStyle('H' . $filaTotal)->getNumberFormat()->setFormatCode('#,##0.00');
 
-        $filaResumen = $filaTotal + 2;
-        $sheet->setCellValue('A' . $filaResumen, 'RESUMEN');
-        $sheet->getStyle('A' . $filaResumen)->getFont()->setBold(true)->setSize(14);
-        $sheet->setCellValue('A' . ($filaResumen + 1), 'Total Encomiendas:');
-        $sheet->setCellValue('B' . ($filaResumen + 1), count($encomiendas));
-        $sheet->setCellValue('A' . ($filaResumen + 2), 'Total General:');
-        $sheet->setCellValue('B' . ($filaResumen + 2), $totalGeneral);
-        $sheet->getStyle('B' . ($filaResumen + 2))->getNumberFormat()->setFormatCode('#,##0.00');
-        $sheet->setCellValue('A' . ($filaResumen + 3), 'Saldo Pendiente:');
-        $sheet->setCellValue('B' . ($filaResumen + 3), "=K{$filaTotal}");
-        $sheet->getStyle('B' . ($filaResumen + 3))->getNumberFormat()->setFormatCode('#,##0.00');
+        $resumenStyle = [
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT, 'vertical' => Alignment::VERTICAL_CENTER]
+        ];
 
-        foreach (range('A', 'F') as $col) {
+        $sheet->setCellValue('J3', 'RESUMEN');
+        $sheet->getStyle('J3')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('J3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->setCellValue('J4', 'Total Encomiendas:');
+        $sheet->setCellValue('K4', count($encomiendas));
+        $sheet->setCellValue('J5', 'Total General:');
+        $sheet->setCellValue('K5', $totalGeneral);
+        $sheet->getStyle('K5')->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->setCellValue('J6', 'Saldo Pendiente:');
+        $sheet->setCellValue('K6', "=H{$filaTotal}");
+        $sheet->getStyle('K6')->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('J3:K6')->applyFromArray($resumenStyle);
+
+        for ($r = 4; $r <= $ultimaFila; $r++) {
+            $sheet->getRowDimension($r)->setRowHeight(22);
+        }
+
+        foreach (range('A', 'D') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-        foreach (range('J', 'L') as $col) {
-            $sheet->getColumnDimension($col)->setWidth(15);
+        $sheet->getColumnDimension('E')->setWidth(20);
+        $sheet->getColumnDimension('F')->setWidth(20);
+        foreach (range('G', 'H') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
         }
+        $sheet->getColumnDimension('J')->setWidth(22);
+        $sheet->getColumnDimension('K')->setWidth(15);
 
         $styleArray = [
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT, 'vertical' => Alignment::VERTICAL_CENTER]
         ];
-        $sheet->getStyle('A4:F' . ($fila-1))->applyFromArray($styleArray);
-        $sheet->getStyle('J4:L' . ($filaCheckbox-1))->applyFromArray($styleArray);
+        $sheet->getStyle('A4:H' . ($fila-1))->applyFromArray($styleArray);
 
         $sheet->freezePane('A4');
     } else {
         $sheet->setCellValue('A' . $filaTotal, 'NO HAY ENCOMIENDAS PENDIENTES DE PAGO');
         $sheet->getStyle('A' . $filaTotal)->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A' . $filaTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->mergeCells('A' . $filaTotal . ':F' . $filaTotal);
+        $sheet->mergeCells('A' . $filaTotal . ':H' . $filaTotal);
 
-        foreach (range('A', 'F') as $col) {
+        foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
