@@ -1,5 +1,6 @@
 const zona = localStorage.getItem("zona");
 var dia = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+let diasCont = [];
 
 localStorage.setItem("dia", dia);
 
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setPanel();
         }
     });
+    
     setPanel();
 });
 
@@ -45,7 +47,7 @@ function setModalOpt() {
             <button onclick="setContingencia()">Contingencia</button>
             <button onclick="listas()">Configuracion</button>
             <button onclick="out()">Cerrar Sesión</button>        
-            <button class="cerrar" onclick="closeModal()">Cerrar</button>
+            <button class="cerrar" onclick="cancelarCont()">Cancelar</button>
         </div>
     `;
 }
@@ -55,18 +57,39 @@ function setContingencia() {
     modBox.innerHTML = `
         <div class="mod-contingencia">
             <div>
-                <label for="fechaMod" id="tFechMod">Selecciona una fecha:</label>
+                <label for="fechaMod" class="titleFech noBack">Selecciona una fecha:</label>
                 <input type="text" id="fechaMod" name="fechaMod">
             </div>
-            <div>
-                <div class="separete">
+            <div id="modCRight">
+                <div class="separate">
                     <h2>Viajes</h2>
-                    <button class="cerrar" onclick="closeModal()">Cerrar</button>
+                    <button class="cerrar" onclick="setModalOpt()">Atras</button>
                 </div>
-                <div id="viajesBoxMod"></div>
+                <div class="flex">
+                    <div id="viaModTT" class="fx">
+                        <h2>Sel.</h2>
+                        <h2>Placa</h2>
+                        <h2>Destino</h2>
+                    </div>
+                    <div id="viaModDin"></div>
+                    <div class="separate">
+                        <button onclick="delContingencia()">Cancelar</button>
+                        <button onclick="newContingencia()">Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
     `;
+    flatpickr("#fechaMod", {
+        inline: true,
+        dateFormat: "d-m-Y",
+        locale: "es",
+        defaultDate: dia,
+        onChange: function (selectedDates, dateStr) {
+            diaCont.push(dateStr);
+            console.log("FechaArray" + diaCont[-1]);
+        }
+    });
 }
 
 function setPanel(){
@@ -186,9 +209,6 @@ function listas() {
 }
 function out() {
     window.location = "inicio.html";
-}
-function faltas() {
-    window.location = "faltas.html";
 }
 function encDia(){
     window.location = "diarios.html";

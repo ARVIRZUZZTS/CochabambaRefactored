@@ -72,6 +72,12 @@ select {
     justify-content: space-between;
     padding: 10% 0%;
 }
+.noBack {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+.fx {
+    display: flex;
+}
 /*-------------------MODAL-------------------*/
 .modal {
     display: none; 
@@ -99,11 +105,24 @@ select {
     margin: 8px 0;
 }
 .mod-contingencia {
+    display: flex;
+    padding: 2%;
     background: white;
-    padding: 20px;
+    margin: 20px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+.mod-contingencia div {
+    
+}
+.mod-contingencia div:first-child {
+}
+#modCRight {
+    width: 60vh;
+    padding-left: 2%;
+    margin-left: 2%;
+    border-left: 1px solid rgba(0, 0, 0, 0.250);
 }
 .cerrar {
     color: rgb(89, 38, 43);

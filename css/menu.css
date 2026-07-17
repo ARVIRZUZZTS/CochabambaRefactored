@@ -16,18 +16,16 @@ main {
     display: flex;
     flex-direction: column;
 }
-#fechaBox label {
-    font-size: xx-large;
-}
 #fechaBox button {
     border: solid 1px rgb(131, 35, 46);
     margin-top: 10px;
 }
-#titleFech {
+.titleFech {
     background-color: rgb(255, 255, 255);;
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
+    font-size: xx-large; 
 } 
 #opcionesMenu {
     background-color: rgba(255, 255, 255, 0.750);
