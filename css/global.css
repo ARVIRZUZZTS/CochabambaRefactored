@@ -70,13 +70,13 @@ select {
 .separate {
     display: flex;
     justify-content: space-between;
-    padding: 10% 0%;
 }
 .noBack {
     background-color: rgba(0, 0, 0, 0) !important;
 }
-.fx {
+.sb {
     display: flex;
+    justify-content: space-between;
 }
 /*-------------------MODAL-------------------*/
 .modal {
@@ -113,16 +113,22 @@ select {
     text-align: center;
     box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
-.mod-contingencia div {
-    
-}
 .mod-contingencia div:first-child {
 }
 #modCRight {
     width: 60vh;
+    max-width: 60vh;
+    overflow-x:  hidden;
+    overflow-y: auto;
     padding-left: 2%;
     margin-left: 2%;
     border-left: 1px solid rgba(0, 0, 0, 0.250);
+}
+#viaModDin {
+    height: 25vh;
+}
+#viaModTT h3 {
+    margin: 0px;
 }
 .cerrar {
     color: rgb(89, 38, 43);

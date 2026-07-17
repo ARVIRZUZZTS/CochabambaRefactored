@@ -236,3 +236,6 @@ main {
 .flatpickr-weekday {
     font-size: larger !important;
 }
+#mt-1 {text-align: left; width: 10%;}
+#mt-2 {text-align: left; width: 20%;}
+#mt-3 {text-align: left; width: 40%;}

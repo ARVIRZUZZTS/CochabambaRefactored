@@ -47,7 +47,7 @@ function setModalOpt() {
             <button onclick="setContingencia()">Contingencia</button>
             <button onclick="listas()">Configuracion</button>
             <button onclick="out()">Cerrar Sesión</button>        
-            <button class="cerrar" onclick="cancelarCont()">Cancelar</button>
+            <button class="cerrar" onclick="closeModal()">Cancelar</button>
         </div>
     `;
 }
@@ -62,16 +62,18 @@ function setContingencia() {
             </div>
             <div id="modCRight">
                 <div class="separate">
-                    <h2>Viajes</h2>
+                    <h2>Viajes Seleccionados</h2>
                     <button class="cerrar" onclick="setModalOpt()">Atras</button>
                 </div>
                 <div class="flex">
-                    <div id="viaModTT" class="fx">
-                        <h2>Sel.</h2>
-                        <h2>Placa</h2>
-                        <h2>Destino</h2>
+                    <div id="viaModTT" class="sb">
+                        <h3 id="mt-1">Sel.</h3>
+                        <h3 id="mt-2">Placa</h3>
+                        <h3 id="mt-3">Destino</h3>
                     </div>
-                    <div id="viaModDin"></div>
+                    <hr>
+                    <div id="viaModDin">Seleccione Fechas.</div>
+                    <hr>
                     <div class="separate">
                         <button onclick="delContingencia()">Cancelar</button>
                         <button onclick="newContingencia()">Guardar</button>
@@ -86,8 +88,8 @@ function setContingencia() {
         locale: "es",
         defaultDate: dia,
         onChange: function (selectedDates, dateStr) {
-            diaCont.push(dateStr);
-            console.log("FechaArray" + diaCont[-1]);
+            diasCont.push(dateStr);
+            console.log("FechaArray: " + diasCont[diasCont.length - 1]);
         }
     });
 }
