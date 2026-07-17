@@ -85,7 +85,7 @@ try {
         $sheet->setCellValue('D' . $fila, $enco['total']);
         $sheet->getStyle('D' . $fila)->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->setCellValue('E' . $fila, 'Por Pagar');
-        $sheet->setCellValue('F' . $fila, "=IF(G{$filaCheckbox}=\"☑\",NOW(),\"\")");
+        $sheet->setCellValue('F' . $fila, "=IF(G{$filaCheckbox}=\"☑\",IF(F{$fila}=\"\",NOW(),F{$fila}),\"\")");
         $sheet->getStyle('F' . $fila)->getNumberFormat()->setFormatCode('yyyy-mm-dd hh:mm');
 
         $validation = $sheet->getCell('G' . $filaCheckbox)->getDataValidation();
@@ -191,6 +191,19 @@ try {
     $tmpFile = tempnam(sys_get_temp_dir(), 'excel_');
     $writer = new Xlsx($spreadsheet);
     $writer->save($tmpFile);
+
+    $zip = new ZipArchive();
+    if ($zip->open($tmpFile) === true) {
+        $xml = $zip->getFromName('xl/workbook.xml');
+        if ($xml !== false) {
+            $replaced = preg_replace('/<calcPr[^>]*\/>/', '<calcPr calcMode="auto" iterate="true" iterateCount="1"/>', $xml, 1, $count);
+            if ($count === 0) {
+                $replaced = preg_replace('/<\/workbook>/', '<calcPr calcMode="auto" iterate="true" iterateCount="1"/></workbook>', $xml, 1);
+            }
+            $zip->addFromString('xl/workbook.xml', $replaced);
+        }
+        $zip->close();
+    }
 
     ob_end_clean();
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
