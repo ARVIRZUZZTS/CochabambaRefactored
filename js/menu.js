@@ -5,13 +5,13 @@ localStorage.setItem("dia", dia);
 
 function showOp(event) {
     event.stopPropagation();
-    document.getElementById("modalOpciones").style.display = "flex";
+    document.getElementById("modBox").style.display = "flex";
 }
 function closeModal() {
-    document.getElementById("modalOpciones").style.display = "none";
+    document.getElementById("modBox").style.display = "none";
 }
 window.addEventListener("click", function(event) {
-    const modal = document.getElementById("modalOpciones");
+    const modal = document.getElementById("modBox");
     if (event.target === modal) {
         modal.style.display = "none";
     }
@@ -21,6 +21,7 @@ function goAddBus() {
     window.location = "bus.html";
 }
 document.addEventListener('DOMContentLoaded', () => {
+    setModalOpt();
     flatpickr("#fecha", {
         inline: true,
         dateFormat: "d-m-Y",
@@ -35,6 +36,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     setPanel();
 });
+
+function setModalOpt() {
+    let modBox = document.getElementById('modBox');
+    modBox.innerHTML = `
+        <div class="modal-content">
+            <h2>Opciones</h2>
+            <button onclick="setContingencia()">Contingencia</button>
+            <button onclick="listas()">Configuracion</button>
+            <button onclick="out()">Cerrar Sesión</button>        
+            <button class="cerrar" onclick="closeModal()">Cerrar</button>
+        </div>
+    `;
+}
+
+function setContingencia() {
+    let modBox = document.getElementById('modBox');
+    modBox.innerHTML = `
+        <div class="mod-contingencia">
+            <div>
+                <label for="fechaMod" id="tFechMod">Selecciona una fecha:</label>
+                <input type="text" id="fechaMod" name="fechaMod">
+            </div>
+            <div>
+                <div class="separete">
+                    <h2>Viajes</h2>
+                    <button class="cerrar" onclick="closeModal()">Cerrar</button>
+                </div>
+                <div id="viajesBoxMod"></div>
+            </div>
+        </div>
+    `;
+}
 
 function setPanel(){
     let boxi = document.getElementById("all");

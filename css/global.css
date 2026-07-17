@@ -66,6 +66,12 @@ select {
     height: 5vh;
     margin: 0.7vh;
 }
+/*-------------------DEFAULT-------------------*/
+.separate {
+    display: flex;
+    justify-content: space-between;
+    padding: 10% 0%;
+}
 /*-------------------MODAL-------------------*/
 .modal {
     display: none; 
@@ -79,7 +85,6 @@ select {
     align-items: center;
     z-index: 1;
 }
-
 .modal-content {
     background: white;
     width: 300px;
@@ -88,11 +93,17 @@ select {
     text-align: center;
     box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
-
 .modal-content button {
     display: block;
     width: 100%;    
     margin: 8px 0;
+}
+.mod-contingencia {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
 .cerrar {
     color: rgb(89, 38, 43);
