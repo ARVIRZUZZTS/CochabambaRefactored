@@ -240,7 +240,7 @@ main {
 #mt-2 {text-align: left; width: 25%;}
 #mt-3 {text-align: left; width: 30%;}
 #mt-4 {text-align: left; width: 25%;}
-.m2-3 {margin-right: 3% !important;}
+
 #viaModTT {
     display: flex;
     width: 100%;
@@ -278,13 +278,7 @@ main {
     cursor: pointer;
     width: 5%;
 }
-.contingencia-info {
-    border-top: 1px dashed rgb(131, 35, 46);
-    margin-top: 8px;
-    padding-top: 8px;
-    display: flex;
-    justify-content: space-between;
-}
+
 .separete {
     display: flex;
     justify-content: space-between;

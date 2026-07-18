@@ -403,10 +403,11 @@ function mostrarContingencias(fecha) {
         let container = document.getElementById("encBox");
         data.forEach(cont => {
             container.innerHTML += `
-                <div class="viaje-item contingencia-info">
-                    <p class="m2-1">Contingencia #${cont.codigo}</p>
-                    <p class="m2-2">${cont.destino}</p>
-                    <button class="m2-3" onclick="contingencia('${cont.codigo}')">Info.</button>
+                <div class="viaje-item">
+                    <p>${cont.placa || ""}</p>
+                    <p>${cont.destino}</p>
+                    <p>Contingencia #${cont.codigo}</p>
+                    <button onclick="contingencia('${cont.codigo}')">+</button>
                 </div>
             `;
         });

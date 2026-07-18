@@ -160,6 +160,10 @@ function showToast(mensaje, esError = false) {
     }, 3000);
 }
 function supaViaje() {
+    const serverBtn = document.getElementById("serverButt");
+    serverBtn.disabled = true;
+    serverBtn.textContent = "Subiendo...";
+
     fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => {
             if (!response.ok) {
@@ -168,7 +172,7 @@ function supaViaje() {
             return response.json();
         })
         .then(() =>{
-            return fetch(`php/encomienda/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
+            return fetch(`php/informacion/estadoImp.php?viaje=${encodeURIComponent(viaje)}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al actualizar estado de impresion");
@@ -177,11 +181,15 @@ function supaViaje() {
             })
             .then(result => {
                 showToast("Subido correctamente al servidor");
+                serverBtn.disabled = false;
+                serverBtn.textContent = "SERVIDOR";
             })
         })
         .catch(error => {
             console.error("Error obteniendo encomiendas:", error);
             showToast("Error al subir los datos", true);
+            serverBtn.disabled = false;
+            serverBtn.textContent = "SERVIDOR";
         });
 }
 function obtenerEncomiendas() {
