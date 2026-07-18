@@ -1,6 +1,7 @@
 const zona = localStorage.getItem("zona");
 var dia = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
 let diasCont = [];
+let codesCont = [];
 
 localStorage.setItem("dia", dia);
 
@@ -92,6 +93,65 @@ function setContingencia() {
             console.log("FechaArray: " + diasCont[diasCont.length - 1]);
         }
     });
+    fetch("php/menu/viajeFast.php", {
+        method: "POST",
+        body: new URLSearchParams({
+            fecha: dia
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let lista = document.getElementById("viaModDin");
+        lista.innerHTML = "";
+        if(data.data.legth === 0) {
+            lista.innerHTML = "<p>No hay viajes pendientes.</p>";
+            return;
+        }
+        data.data.forEach(viaje => {
+            codesCont.push(viaje.viajeCod);
+            lista.innerHTML += `
+                <div class="contingencia-item">
+                    //checkbox en true por defecto porque ya esta en codesCont, si lo quitamos, lo quitamos en codeCont
+                    <p>${viaje.placa}</p>
+                    <p>${viaje.destino}</p>
+                </div>
+            `;
+        });
+    })
+}
+
+//function evento de agregar y de quitar con los checkbox a la codesCont, no importa el orden realmente
+
+function newContingencia() {
+    // en este caso tenemos que guardar los viajes en las validaciones, revisa contingencia.sql
+    // y guardamos segun el destino, imagino talvez que deberiamos guardar una tupla no?
+    // en la parte de codeCont para tener el viajeCod y destino, ya que si el destino
+    // es "Cochabamba", "Montero", pues se crea una contingencia unos es auto increment que es el id, luego
+    // vemos el codigo, el ultimo que fue creado y agregamos ese numero+1 y toda la lista de viajeCod
+    //ojo mira, en un dia se pueden enviar de varios destinos, pero solo agrupamos segun destino
+    // digamos "Cochabamba" y "Montero" para eso hay viajes en un mismo dia pero digamos tenemos varias fechas seleccionadas
+    // 14,15,16,17 y 18 del 07, y hay 3 viajes a "Santa Cruz" y "Yacuiba" y como no son Cochabamba o Montero, pues lo coloco en uno mismo, digamos id=1,codigo=3,codeViaje=${codeviaje} y asi, 
+    // luego el tercero es a "Montero" entonces lo agrupamos en otra variable o algo asi, y este de montero o si fuese de cbba pues seria tipo id=2,codigo=4,codeViaje=${codeviaje}
+    // y lo mandamos a saveContingencia, y bueno ese seria el flujo, y ahi se guardaria
+    // eso si en las contingencias con las fechas actuales
+    // entonces en este caso debemos crear 2 contingencias no, si no son de cbba o mont pues
+    // todo junto
+    fetch("php/menu/saveContingencia.php", {
+        method: "POST",
+        body: new URLSearchParams({
+            fecha: dia
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        
+    })
+    window.location = "contingencia.html";
+}
+
+function delContingencia() {
+    confirmation("Esta seguro de cancelar la contingencia? La lista se perdera."); //revisa esta parte si esta bien la confirmacion para limpiar la variable
+    codesCont.length = 0;
 }
 
 function setPanel(){
@@ -194,10 +254,19 @@ function obtenerViajes(fecha) {
                 `;
             })
         }
+        // aqui deberiamos agregar la contingencia con este formato
+        //<div>
+        //    <p>Contingencia #${contigencia.codigo}</p>
+        //    <button onclick="contingencia('${contingencia.codigo}')">Info.</button>
+        //</div>
     })
     .catch(error => console.error("Error obteniendo viajes:", error));
 }
-
+// deberiamos crear la de function contingencia() y guardamos en el localStorage, ya estaria
+function contingencia(id){
+    localStorage.setItem("contingencia", id);
+    window.location = "contingencia.html";
+}
 function info(code){
     localStorage.setItem("viajeL", code);
     window.location = "informacion.html";
