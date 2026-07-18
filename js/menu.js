@@ -54,6 +54,9 @@ function setModalOpt() {
 }
 
 function setContingencia() {
+    diasCont = [];
+    codesCont = [];
+
     let modBox = document.getElementById('modBox');
     modBox.innerHTML = `
         <div class="mod-contingencia">
@@ -71,6 +74,7 @@ function setContingencia() {
                         <h3 id="mt-1">Sel.</h3>
                         <h3 id="mt-2">Placa</h3>
                         <h3 id="mt-3">Destino</h3>
+                        <h3 id="mt-4">Fecha</h3>
                     </div>
                     <hr>
                     <div id="viaModDin">Seleccione Fechas.</div>
@@ -83,75 +87,150 @@ function setContingencia() {
             </div>
         </div>
     `;
+
     flatpickr("#fechaMod", {
         inline: true,
         dateFormat: "d-m-Y",
         locale: "es",
         defaultDate: dia,
         onChange: function (selectedDates, dateStr) {
-            diasCont.push(dateStr);
-            console.log("FechaArray: " + diasCont[diasCont.length - 1]);
+            if (!diasCont.includes(dateStr)) {
+                diasCont.push(dateStr);
+            }
+            console.log("Fechas seleccionadas: " + diasCont.join(", "));
+            cargarViajesFecha(dateStr);
         }
     });
+
+    if (!diasCont.includes(dia)) {
+        diasCont.push(dia);
+    }
+    cargarViajesFecha(dia);
+}
+
+function cargarViajesFecha(fecha) {
     fetch("php/menu/viajeFast.php", {
         method: "POST",
-        body: new URLSearchParams({
-            fecha: dia
-        })
+        body: new URLSearchParams({ fecha: fecha })
     })
     .then(res => res.json())
     .then(data => {
         let lista = document.getElementById("viaModDin");
-        lista.innerHTML = "";
-        if(data.data.legth === 0) {
-            lista.innerHTML = "<p>No hay viajes pendientes.</p>";
+        if (data.length === 0) {
+            if (lista.innerHTML.trim() === "" || lista.innerHTML === "Seleccione Fechas.") {
+            }
             return;
         }
-        data.data.forEach(viaje => {
-            codesCont.push(viaje.viajeCod);
+        if (lista.innerHTML === "Seleccione Fechas.") {
+            lista.innerHTML = "";
+        }
+        data.forEach(viaje => {
+            if (codesCont.some(c => c.codigo === viaje.viajeCod)) return;
+            codesCont.push({ codigo: viaje.viajeCod, destino: viaje.destino, placa: viaje.placa, fecha: fecha });
             lista.innerHTML += `
                 <div class="contingencia-item">
-                    //checkbox en true por defecto porque ya esta en codesCont, si lo quitamos, lo quitamos en codeCont
+                    <input type="checkbox" class="cont-check" data-codigo="${viaje.viajeCod}" checked>
                     <p>${viaje.placa}</p>
                     <p>${viaje.destino}</p>
+                    <p>${fecha}</p>
                 </div>
             `;
         });
     })
 }
 
-//function evento de agregar y de quitar con los checkbox a la codesCont, no importa el orden realmente
+document.addEventListener("change", function(event) {
+    if (event.target.classList.contains("cont-check")) {
+        let codigo = event.target.dataset.codigo;
+        if (event.target.checked) {
+            let viajeRef = codesCont.find(c => c.codigo === codigo);
+            if (!viajeRef) {
+                let item = event.target.closest(".contingencia-item");
+                let placa = item.querySelector("p:nth-of-type(1)").textContent;
+                let destino = item.querySelector("p:nth-of-type(2)").textContent;
+                let fecha = item.querySelector("p:nth-of-type(3)").textContent;
+                codesCont.push({ codigo: codigo, destino: destino, placa: placa, fecha: fecha });
+            }
+        } else {
+            codesCont = codesCont.filter(c => c.codigo !== codigo);
+        }
+    }
+});
 
 function newContingencia() {
-    // en este caso tenemos que guardar los viajes en las validaciones, revisa contingencia.sql
-    // y guardamos segun el destino, imagino talvez que deberiamos guardar una tupla no?
-    // en la parte de codeCont para tener el viajeCod y destino, ya que si el destino
-    // es "Cochabamba", "Montero", pues se crea una contingencia unos es auto increment que es el id, luego
-    // vemos el codigo, el ultimo que fue creado y agregamos ese numero+1 y toda la lista de viajeCod
-    //ojo mira, en un dia se pueden enviar de varios destinos, pero solo agrupamos segun destino
-    // digamos "Cochabamba" y "Montero" para eso hay viajes en un mismo dia pero digamos tenemos varias fechas seleccionadas
-    // 14,15,16,17 y 18 del 07, y hay 3 viajes a "Santa Cruz" y "Yacuiba" y como no son Cochabamba o Montero, pues lo coloco en uno mismo, digamos id=1,codigo=3,codeViaje=${codeviaje} y asi, 
-    // luego el tercero es a "Montero" entonces lo agrupamos en otra variable o algo asi, y este de montero o si fuese de cbba pues seria tipo id=2,codigo=4,codeViaje=${codeviaje}
-    // y lo mandamos a saveContingencia, y bueno ese seria el flujo, y ahi se guardaria
-    // eso si en las contingencias con las fechas actuales
-    // entonces en este caso debemos crear 2 contingencias no, si no son de cbba o mont pues
-    // todo junto
-    fetch("php/menu/saveContingencia.php", {
+    let selected = codesCont.filter(c => document.querySelector(`.cont-check[data-codigo="${c.codigo}"]`));
+    if (selected.length === 0) {
+        showToast("Seleccione al menos un viaje.");
+        return;
+    }
+    if (diasCont.length === 0) {
+        showToast("Seleccione al menos una fecha.");
+        return;
+    }
+
+    let grupos = { cbba: [], montero: [], otros: [] };
+    let destinosOtros = [];
+
+    selected.forEach(v => {
+        let d = v.destino.trim().toLowerCase();
+        if (d === "cochabamba") {
+            grupos.cbba.push(v.codigo);
+        } else if (d === "montero") {
+            grupos.montero.push(v.codigo);
+        } else {
+            grupos.otros.push(v.codigo);
+            if (!destinosOtros.includes(v.destino)) {
+                destinosOtros.push(v.destino);
+            }
+        }
+    });
+
+    let pendientes = [];
+
+    if (grupos.cbba.length > 0) {
+        pendientes.push(guardarGrupo(grupos.cbba, "Cochabamba", dia));
+    }
+    if (grupos.montero.length > 0) {
+        pendientes.push(guardarGrupo(grupos.montero, "Montero", dia));
+    }
+    if (grupos.otros.length > 0) {
+        pendientes.push(guardarGrupo(grupos.otros, destinosOtros.join(", "), dia));
+    }
+
+    Promise.all(pendientes)
+        .then(() => {
+            showToast("Contingencia guardada correctamente.");
+            setTimeout(() => {
+                window.location = "contingencia.html";
+            }, 1000);
+        })
+        .catch(err => {
+            console.error("Error al guardar:", err);
+            showToast("Error al guardar la contingencia.", true);
+        });
+}
+
+function guardarGrupo(viajeCodes, destino, fecha) {
+    return fetch("php/menu/saveContingencia.php", {
         method: "POST",
         body: new URLSearchParams({
-            fecha: dia
+            viajeCod: viajeCodes.join(","),
+            destino: destino,
+            fecha: fecha
         })
     })
     .then(res => res.json())
     .then(data => {
-        
-    })
-    window.location = "contingencia.html";
+        if (!data.success) throw new Error(data.error);
+    });
 }
 
 function delContingencia() {
-    confirmation("Esta seguro de cancelar la contingencia? La lista se perdera."); //revisa esta parte si esta bien la confirmacion para limpiar la variable
-    codesCont.length = 0;
+    if (!confirm("Esta seguro de cancelar la contingencia? La lista se perdera.")) return;
+    codesCont = [];
+    diasCont = [];
+    document.getElementById("viaModDin").innerHTML = "Seleccione Fechas.";
+    showToast("Lista de contingencia cancelada.");
 }
 
 function setPanel(){
@@ -205,7 +284,7 @@ function setLlegada(){
     .then(data => {
         let lista = document.getElementById("listaLlegada");
         lista.innerHTML = "";
-        if(data.data.legth === 0) {
+        if (!data.data || data.data.length === 0) {
             lista.innerHTML = "<p>No hay viajes pendientes.</p>";
             return;
         }
@@ -254,15 +333,32 @@ function obtenerViajes(fecha) {
                 `;
             })
         }
-        // aqui deberiamos agregar la contingencia con este formato
-        //<div>
-        //    <p>Contingencia #${contigencia.codigo}</p>
-        //    <button onclick="contingencia('${contingencia.codigo}')">Info.</button>
-        //</div>
+        mostrarContingencias(fecha);
     })
     .catch(error => console.error("Error obteniendo viajes:", error));
 }
-// deberiamos crear la de function contingencia() y guardamos en el localStorage, ya estaria
+
+function mostrarContingencias(fecha) {
+    fetch("php/menu/contingenciaGet.php", {
+        method: "POST",
+        body: new URLSearchParams({ fecha: fecha })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.length === 0) return;
+        let container = document.getElementById("encBox");
+        data.forEach(cont => {
+            container.innerHTML += `
+                <div class="viaje-item contingencia-info">
+                    <p class="m2-1">Contingencia #${cont.codigo}</p>
+                    <p class="m2-2">${cont.destino}</p>
+                    <button class="m2-3" onclick="contingencia('${cont.codigo}')">Info.</button>
+                </div>
+            `;
+        });
+    })
+}
+
 function contingencia(id){
     localStorage.setItem("contingencia", id);
     window.location = "contingencia.html";
@@ -281,6 +377,20 @@ function listas() {
 function out() {
     window.location = "inicio.html";
 }
+function faltas() {
+    window.location = "faltas.html";
+}
 function encDia(){
     window.location = "diarios.html";
+}
+
+function showToast(mensaje, esError = false) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = mensaje;
+    toast.style.backgroundColor = esError ? "#d9534f" : "#4CAF50";
+    toast.className = "show";
+    setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+    }, 3000);
 }

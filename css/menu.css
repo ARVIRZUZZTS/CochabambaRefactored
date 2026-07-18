@@ -237,5 +237,75 @@ main {
     font-size: larger !important;
 }
 #mt-1 {text-align: left; width: 10%;}
-#mt-2 {text-align: left; width: 20%;}
-#mt-3 {text-align: left; width: 40%;}
+#mt-2 {text-align: left; width: 25%;}
+#mt-3 {text-align: left; width: 30%;}
+#mt-4 {text-align: left; width: 25%;}
+.m2-3 {margin-right: 3% !important;}
+#viaModTT {
+    display: flex;
+    width: 100%;
+    padding: 5px 0;
+}
+#viaModDin {
+    max-height: 30vh;
+    overflow-y: auto;
+}
+.contingencia-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+}
+.contingencia-item p {
+    margin: 0;
+    font-size: medium;
+}
+.contingencia-item p {
+    text-align: left;
+}
+.contingencia-item p:nth-of-type(1) {
+    width: 25%;
+    padding-left: 5%;
+}
+.contingencia-item p:nth-of-type(2) {
+    width: 30%;
+}
+.contingencia-item p:nth-of-type(3) {
+    width: 25%;
+}
+.contingencia-item .cont-check {
+    height: 16px;
+    cursor: pointer;
+    width: 5%;
+}
+.contingencia-info {
+    border-top: 1px dashed rgb(131, 35, 46);
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.separete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+.sb {
+    display: flex;
+    justify-content: space-between;
+}
+.mod-contingencia {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    max-width: 90vw;
+}
+#modCRight {
+    margin-top: 12px;
+}
