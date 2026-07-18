@@ -11,6 +11,10 @@ let tramo2C = 0;
 let tramo2PP = 0;
 
 let espV = 0;
+let destinoCont = "";
+let placaCont = "";
+let propietarioCont = "";
+let choferCont = "";
 
 function back() {
     window.location = "menu.html";
@@ -34,9 +38,25 @@ function cargarDatos() {
             return;
         }
 
-        document.getElementById("deTit").textContent = "Destino: " + data.destino;
+        destinoCont = data.destino || "";
+        placaCont = data.placa || "";
+        propietarioCont = data.propietario || "";
+        choferCont = data.chofer || "";
+
+        document.getElementById("deTit").textContent = "Destino: " + destinoCont;
         document.getElementById("feTit").textContent = "Fecha: " + data.fecha;
-        document.getElementById("cdTk").textContent = "Código: " + codigoCont;
+        document.getElementById("cdTk").textContent = "Codigo: " + codigoCont;
+
+        if (placaCont) {
+            document.getElementById("plTit").textContent = "Placa: " + placaCont;
+            document.getElementById("prTit").textContent = "Propietario: " + propietarioCont;
+            document.getElementById("chTit").textContent = "Chofer: " + choferCont;
+            document.getElementById("plTk").textContent = "Placa: " + placaCont;
+            document.getElementById("prTk").textContent = "Propietario: " + propietarioCont;
+            document.getElementById("chTk").textContent = "Chofer: " + choferCont;
+            document.getElementById("fcTk").textContent = "Fecha: " + data.fecha;
+            document.getElementById("viTk").textContent = "Contingencia #" + codigoCont;
+        }
 
         cargarTitulos();
         obtenerEncomiendas(data.encomiendas);
@@ -85,6 +105,9 @@ function obtenerEncomiendas(encomiendas) {
         <img id="imgPr3" src="img/logXXF.png" alt="">
         <h3 id="titu">LIQ. CONTINGENCIA #${codigoCont}</h3>
         <h3>Contingencia #${codigoCont}</h3>
+        <h3>Placa: ${placaCont}</h3>
+        <h3>Propietario: ${propietarioCont}</h3>
+        <h3>Chofer: ${choferCont}</h3>
         <div id="fechHR">
             <h3>Fecha: ${fecha}</h3>
             <h3>Hora: ${horaAct()}</h3>
@@ -259,6 +282,9 @@ function imprimir(conEnc) {
                         </div>
                         <h2>Origen: ${data.encomienda.origen.toUpperCase()}</h2>
                         <h2 class="destinos">Destino: ${destinoAux.toUpperCase()}</h2>
+                        <h2><strong>Propietario:</strong> ${propietarioCont}</h2>
+                        <h2><strong>Chofer:</strong> ${choferCont}</h2>
+                        <h2><strong>Placa:</strong> ${placaCont}</h2>
                         <h2><strong>Remitente:</strong> ${data.encomienda.remitente} (${data.encomienda.remTelf})</h2>
                         <h2><strong>Consignatario:</strong> ${data.encomienda.consignatario} (${data.encomienda.conTelf})</h2>
                         <h2><strong>Detalle:</strong> ${data.encomienda.bulto}</h2>
@@ -346,4 +372,22 @@ function horaAct() {
     let horas = ahora.getHours().toString().padStart(2, "0");
     let min = ahora.getMinutes().toString().padStart(2, "0");
     return `${horas}:${min}`;
+}
+
+function eliminar() {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta Contingencia #" + codigoCont + "?")) {
+        return;
+    }
+
+    fetch(`php/contingencia/contingenciaDel.php?codigo=${encodeURIComponent(codigoCont)}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            localStorage.setItem("contingencia", "");
+            window.location = "menu.html";
+        } else {
+            alert("Error al eliminar: " + data.error);
+        }
+    })
+    .catch(error => console.error("Error al eliminar:", error));
 }

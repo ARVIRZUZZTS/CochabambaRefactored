@@ -4,7 +4,7 @@
     if (isset($_POST['codigo'])) {
         $codigo = $_POST['codigo'];
 
-        $stmt = $conexion->prepare("SELECT destino, fecha FROM contingencia WHERE codigo = ? LIMIT 1");
+        $stmt = $conexion->prepare("SELECT destino, fecha, placa, propietario, chofer FROM contingencia WHERE codigo = ? LIMIT 1");
         $stmt->bind_param("s", $codigo);
         $stmt->execute();
         $contRes = $stmt->get_result();
@@ -26,7 +26,16 @@
         }
 
         if (empty($viajeCodes)) {
-            echo json_encode(["success" => true, "codigo" => $codigo, "destino" => $contData['destino'], "fecha" => $contData['fecha'], "encomiendas" => []]);
+            echo json_encode([
+                "success" => true,
+                "codigo" => $codigo,
+                "destino" => $contData['destino'],
+                "fecha" => $contData['fecha'],
+                "placa" => $contData['placa'],
+                "propietario" => $contData['propietario'],
+                "chofer" => $contData['chofer'],
+                "encomiendas" => []
+            ]);
             exit;
         }
 
@@ -48,6 +57,9 @@
             "codigo" => $codigo,
             "destino" => $contData['destino'],
             "fecha" => $contData['fecha'],
+            "placa" => $contData['placa'],
+            "propietario" => $contData['propietario'],
+            "chofer" => $contData['chofer'],
             "encomiendas" => $encomiendas
         ]);
 

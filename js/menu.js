@@ -2,6 +2,7 @@ const zona = localStorage.getItem("zona");
 var dia = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
 let diasCont = [];
 let codesCont = [];
+let flotaVehiculo = null;
 
 localStorage.setItem("dia", dia);
 
@@ -79,14 +80,22 @@ function setContingencia() {
                     <hr>
                     <div id="viaModDin">Seleccione Fechas.</div>
                     <hr>
+                    <div class="flex" style="gap:6px">
+                        <label for="flotaInput" style="font-weight:bold;font-size:small">Vehículo:</label>
+                        <input type="text" id="flotaInput" list="flotaList" autocomplete="off" style="width:100%;height:32px;font-size:small;box-sizing:border-box" placeholder="Buscar placa...">
+                        <datalist id="flotaList"></datalist>
+                    </div>
+                    <hr>
                     <div class="separate">
-                        <button onclick="delContingencia()">Cancelar</button>
+                        <button onclick="delContingencia()">Elminar Lista</button>
                         <button onclick="newContingencia()">Guardar</button>
                     </div>
                 </div>
             </div>
         </div>
     `;
+
+    cargarFlotasSelect();
 
     flatpickr("#fechaMod", {
         inline: true,
@@ -106,6 +115,35 @@ function setContingencia() {
         diasCont.push(dia);
     }
     cargarViajesFecha(dia);
+}
+
+function cargarFlotasSelect() {
+    fetch("php/bus/flotas.php")
+        .then(res => res.json())
+        .then(data => {
+            let input = document.getElementById("flotaInput");
+            let list = document.getElementById("flotaList");
+            if (!input || !list) return;
+            list.innerHTML = "";
+            data.forEach(f => {
+                let opt = document.createElement("option");
+                opt.value = f.placa;
+                opt.dataset.prop = f.propietario;
+                opt.dataset.chof = f.chofer;
+                opt.textContent = `${f.placa} — ${f.propietario} | ${f.chofer}`;
+                list.appendChild(opt);
+            });
+            input.addEventListener("input", function() {
+                let val = this.value.trim();
+                let match = data.find(f => f.placa === val);
+                if (match) {
+                    flotaVehiculo = { placa: match.placa, propietario: match.propietario, chofer: match.chofer };
+                } else {
+                    flotaVehiculo = null;
+                }
+            });
+        })
+        .catch(e => console.error("Error cargando flotas:", e));
 }
 
 function cargarViajesFecha(fecha) {
@@ -167,6 +205,10 @@ function newContingencia() {
         showToast("Seleccione al menos una fecha.");
         return;
     }
+    if (!flotaVehiculo) {
+        showToast("Seleccione un vehículo (placa).");
+        return;
+    }
 
     let grupos = { cbba: [], montero: [], otros: [] };
     let destinosOtros = [];
@@ -185,21 +227,29 @@ function newContingencia() {
         }
     });
 
-    let pendientes = [];
+    let tareas = [];
 
     if (grupos.cbba.length > 0) {
-        pendientes.push(guardarGrupo(grupos.cbba, "Cochabamba", dia));
+        tareas.push(() => guardarGrupo(grupos.cbba, "Cochabamba", dia));
     }
     if (grupos.montero.length > 0) {
-        pendientes.push(guardarGrupo(grupos.montero, "Montero", dia));
+        tareas.push(() => guardarGrupo(grupos.montero, "Montero", dia));
     }
     if (grupos.otros.length > 0) {
-        pendientes.push(guardarGrupo(grupos.otros, destinosOtros.join(", "), dia));
+        tareas.push(() => guardarGrupo(grupos.otros, destinosOtros.join(", "), dia));
     }
 
-    Promise.all(pendientes)
+    let ultimoCodigo = null;
+    let promesa = Promise.resolve();
+
+    tareas.forEach(t => {
+        promesa = promesa.then(() => t().then(codigo => { ultimoCodigo = codigo; }));
+    });
+
+    promesa
         .then(() => {
-            showToast("Contingencia guardada correctamente.");
+            localStorage.setItem("contingencia", ultimoCodigo);
+            showToast("Contingencia #" + ultimoCodigo + " guardada.");
             setTimeout(() => {
                 window.location = "contingencia.html";
             }, 1000);
@@ -216,12 +266,16 @@ function guardarGrupo(viajeCodes, destino, fecha) {
         body: new URLSearchParams({
             viajeCod: viajeCodes.join(","),
             destino: destino,
-            fecha: fecha
+            fecha: fecha,
+            placa: flotaVehiculo.placa,
+            propietario: flotaVehiculo.propietario,
+            chofer: flotaVehiculo.chofer
         })
     })
     .then(res => res.json())
     .then(data => {
         if (!data.success) throw new Error(data.error);
+        return data.codigo;
     });
 }
 
