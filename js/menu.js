@@ -318,8 +318,9 @@ function setLlegada(){
         </div>
         <div id="encomiendas">
             <div class="titleLlegada">
-                <h3 class="placLl3">Placa</h3>
-                <h3 class="infoLl3">Información</h3>
+                <h3>Placa</h3>
+                <h3>Destino</h3>
+                <h3>Información</h3>
             </div>
             <div id="encBox">
                 <div id="listaLlegada">Cargando...</div>
@@ -345,8 +346,9 @@ function setLlegada(){
         data.data.forEach(viaje => {
             lista.innerHTML += `
                 <div class="llegada-item">
-                    <p class="llegadaPlaca">${viaje.placa}</p>
-                    <button id="llegadaInfo" onclick="infoLlegada('${viaje.viajeCod}')">Info</button>
+                    <p>${viaje.placa}</p>
+                    <p>${getDestinoFromViajeCod(viaje.viajeCod)}</p>
+                    <button onclick="infoLlegada('${viaje.viajeCod}')">Info</button>
                 </div>
             `;
         });
@@ -437,6 +439,13 @@ function faltas() {
 }
 function encDia(){
     window.location = "diarios.html";
+}
+
+function getDestinoFromViajeCod(codigo) {
+    if (codigo.includes("CB")) return "Cochabamba";
+    if (codigo.includes("SC")) return "Santa Cruz";
+    if (codigo.includes("MO")) return "Montero";
+    return "Otro";
 }
 
 function showToast(mensaje, esError = false) {
