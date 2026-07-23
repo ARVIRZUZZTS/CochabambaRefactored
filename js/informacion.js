@@ -37,13 +37,7 @@ function edit() {
 document.addEventListener("DOMContentLoaded", function () {destino
     cargarDatos();
     setH();
-    setServer();
 });
-function setServer() {
-    if (est == 1) {
-        document.getElementById("serverButt").style.backgroundColor = rgb(132, 98, 102);
-    }
-}
 function cargarDatos() {
     fetch(`php/informacion/viajeAll.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => response.json())
@@ -160,10 +154,6 @@ function showToast(mensaje, esError = false) {
     }, 3000);
 }
 function supaViaje() {
-    const serverBtn = document.getElementById("serverButt");
-    serverBtn.disabled = true;
-    serverBtn.textContent = "Subiendo...";
-
     fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
         .then(response => {
             if (!response.ok) {
@@ -180,16 +170,13 @@ function supaViaje() {
                 return response.text();
             })
             .then(result => {
+                est = "1";
                 showToast("Subido correctamente al servidor");
-                serverBtn.disabled = false;
-                serverBtn.textContent = "SERVIDOR";
             })
         })
         .catch(error => {
             console.error("Error obteniendo encomiendas:", error);
             showToast("Error al subir los datos", true);
-            serverBtn.disabled = false;
-            serverBtn.textContent = "SERVIDOR";
         });
 }
 function obtenerEncomiendas() {
@@ -635,6 +622,10 @@ function printDiv(aux) {
     setSpace(aux);
     window.print();
     document.getElementById('ticket').classList.remove('print-visible');
+
+    if (est == "0") {
+        supaViaje();
+    }
 }
 
 function setSpace(aux) {
