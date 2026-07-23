@@ -1,6 +1,7 @@
 const zonaL = localStorage.getItem("zona");
 
 document.addEventListener("DOMContentLoaded", function() {
+    procesarViajesPendientes();
     usuarios();
 });
 function usuarios() {

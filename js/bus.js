@@ -3,6 +3,7 @@ const zonaL = localStorage.getItem("zona");
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    procesarViajesPendientes();
     document.getElementById("horaInp").value = horaAct();
     document.getElementById("fechaTitle").textContent = "Fecha: " + diaL;
     document.getElementById("origenTitle").textContent = "Origen: " + zonaL;

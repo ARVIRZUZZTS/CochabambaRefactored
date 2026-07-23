@@ -3,6 +3,7 @@ const zonaL = localStorage.getItem("zona");
 const viajeL = localStorage.getItem("viajeL");
 
 document.addEventListener("DOMContentLoaded", () => {
+    procesarViajesPendientes();
     document.getElementById("fechaTitle").textContent = "Viaje en Fecha: " + diaL;
     document.getElementById("origenTitle").textContent = "Origen: " + zonaL;
     cargarFlotas();

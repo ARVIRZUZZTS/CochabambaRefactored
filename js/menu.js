@@ -24,6 +24,7 @@ function goAddBus() {
     window.location = "bus.html";
 }
 document.addEventListener('DOMContentLoaded', () => {
+    procesarViajesPendientes();
     setModalOpt();
     flatpickr("#fecha", {
         inline: true,
@@ -456,5 +457,5 @@ function showToast(mensaje, esError = false) {
     toast.className = "show";
     setTimeout(() => {
         toast.className = toast.className.replace("show", "");
-    }, 3000);
+    }, 5000);
 }

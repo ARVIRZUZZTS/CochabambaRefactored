@@ -18,6 +18,7 @@ function back() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {destino
+    procesarViajesPendientes();
     cargarDatos();
     setH();
 });
@@ -103,7 +104,7 @@ function showToast(mensaje, esError = false) {
     
     setTimeout(() => {
         toast.className = toast.className.replace("show", "");
-    }, 3000);
+    }, 5000);
 }
 function obtenerEncomiendas() {
     fetch(`php/llegada/encomiendaLlegada.php?viaje=${encodeURIComponent(viaje)}`)

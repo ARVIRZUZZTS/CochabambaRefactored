@@ -5,6 +5,7 @@ let porPagar = 0;
 let cancelado = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
+    procesarViajesPendientes();
     diarios();
     document.getElementById("topTitleDia").textContent = "Encomiendas del DIA: " + diaL;
 });

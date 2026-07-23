@@ -35,6 +35,7 @@ function edit() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {destino
+    procesarViajesPendientes();
     cargarDatos();
     setH();
 });
@@ -151,7 +152,7 @@ function showToast(mensaje, esError = false) {
     
     setTimeout(() => {
         toast.className = toast.className.replace("show", "");
-    }, 3000);
+    }, 5000);
 }
 function supaViaje() {
     fetch(`php/informacion/viajeSB.php?viaje=${encodeURIComponent(viaje)}`)
@@ -171,6 +172,7 @@ function supaViaje() {
             })
             .then(result => {
                 est = "1";
+                quitarViajePendiente(viaje);
                 showToast("Subido correctamente al servidor");
             })
         })
@@ -624,6 +626,7 @@ function printDiv(aux) {
     document.getElementById('ticket').classList.remove('print-visible');
 
     if (est == "0") {
+        agregarViajePendiente(viaje);
         supaViaje();
     }
 }

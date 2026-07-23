@@ -4,6 +4,7 @@ const dia = localStorage.getItem("dia");
 const encDest = localStorage.getItem("encDest");
 
 document.addEventListener('DOMContentLoaded', function() {
+    procesarViajesPendientes();
     cargarDestinos();
     document.getElementById('titleViaje').innerText = `N° Viaje: ${viajeL}`;
 });

@@ -21,6 +21,7 @@ function back() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    procesarViajesPendientes();
     cargarDatos();
 });
 

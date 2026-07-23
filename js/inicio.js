@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     verificador();
     cargarZonas();
+    procesarViajesPendientes();
 });
 
 async function verificador() {

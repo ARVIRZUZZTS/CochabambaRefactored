@@ -6,6 +6,7 @@ function back(){
     window.location = "diarios.html";
 }
 document.addEventListener("DOMContentLoaded", function () {
+    procesarViajesPendientes();
     sety();
     cargarDestinos();
     document.getElementById("titleEncomienda").innerText = `Editar datos de la Encomienda: ${code}`;
