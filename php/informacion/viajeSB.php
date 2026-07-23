@@ -57,10 +57,10 @@
             'bulto'         => $rowE['bulto'],
             'estadoPaga'    => $rowE['estadoPaga']
         ];
+    }
 
-        if(!empty($datosParaSubir)) {
-            $sb->insert('encomiendabodega', $datosParaSubir);
-        }
+    if (!empty($datosParaSubir)) {
+        $sb->insert('encomiendabodega', $datosParaSubir);
     }
     echo json_encode(["status" => "success", "message" => "Sincronización completada"]);    
 ?>

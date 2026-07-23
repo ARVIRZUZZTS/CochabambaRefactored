@@ -57,7 +57,7 @@ class SupabaseClient {
             'Content-Type: application/json',
             'apiKey: ' . $this->apiKey,
             'Authorization: Bearer ' . $this->apiKey,
-            'Prefer: resolution=merge-duplicates'
+            'Prefer: return=minimal, resolution=merge-duplicates'
         ];
         
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
