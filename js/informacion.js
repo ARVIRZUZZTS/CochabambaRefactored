@@ -692,3 +692,47 @@ function eliminar() {
     })
     .catch(error => console.error("Error al eliminar:", error));
 }
+function tramos() {
+    let box = document.getElementById("modBox");    
+    //aqui generamos un modal como en menu.js/menu.html pero mostrariamos
+    box.innerHTML = `
+        div
+            h1 Medios Tramos
+            h3 ${fecha}
+        /div
+        div #tramosTitle
+            h3 .tT-1 .tB-1 Dest
+            h3 .tT-2 .tB-2 Enc
+            h3 .tT-3 .tB-3 Total
+        /div
+        div #tramosList
+        /div
+    `;
+    let tramosList = document.getElementById("tramosList");
+    fetch(`php/informacion/getTramos.php?viajeCod=${encodeURIComponent(viaje)}`)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(tramo => {
+            tramosList.innerHTML += `
+                div
+                    h3 .tT-1 .tB-1 ${tramo.abrev}
+                    h3 .tT-2 .tB-2 ${tramo.conEnc}
+                    h3 .tT-3 .tB-3 ${segT}r
+                /div
+            `;
+        });
+        let aux = tramo2C + tramo2PP;
+        box.innerHTML += `
+            hr
+            div .sb
+                h3 Total:
+                h3 ${aux}r
+            /div
+            div .sb
+                button onclick="closeModal()" Cerrar
+                button onclick="printTramos()" Imprimir
+            /div
+        `;
+    })
+    .catch(error => console.error("Error al cargar los Tramos: ", error));
+}
