@@ -245,6 +245,11 @@ main {
         display: none !important;
     }
     
+    #encomiendas {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
     /* Ocultar todos por defecto */
     #ticket, #boletin, #resumen, #modBox {
         display: none !important;

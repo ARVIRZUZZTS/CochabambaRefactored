@@ -336,9 +336,9 @@ function tramos() {
             <h1>Medios Tramos</h1>
             <h3>${fecha}</h3>
             <div id="tramosTitle">
-                <h3 class="tT-1 tB-1">Dest</h3>
-                <h3 class="tT-2 tB-2">Enc</h3>
-                <h3 class="tT-3 tB-3">Total</h3>
+                <h3 class="tT-1 nm tB-1">Dest</h3>
+                <h3 class="tT-2 nm tB-2">Enc</h3>
+                <h3 class="tT-3 nm tB-3">Total</h3>
             </div>
             <div id="tramosList"></div>
             <div id="tramosFoot"></div>
@@ -372,17 +372,17 @@ function tramos() {
             totalSum += monto;
             tramosList.innerHTML += `
                 <div class="tramosRow">
-                    <h3 class="tT-1 tB-1">${sufijo}</h3>
-                    <h3 class="tT-2 tB-2">${e.conEnc}</h3>
-                    <h3 class="tT-3 tB-3">${monto.toFixed(2)}</h3>
+                    <h3 class="tT-1 nm tB-1">${sufijo}</h3>
+                    <h3 class="tT-2 nm tB-2">${e.conEnc}</h3>
+                    <h3 class="tT-3 nm tB-3">${monto.toFixed(2)}</h3>
                 </div>
             `;
         });
         tramosFoot.innerHTML = `
             <hr>
             <div class="sb">
-                <h3>Total:</h3>
-                <h3>${totalSum.toFixed(2)} Bs</h3>
+                <h3 class ="nm">Total:</h3>
+                <h3 class ="nm">${totalSum.toFixed(2)} Bs</h3>
             </div>
         `;
     })
@@ -413,9 +413,9 @@ function printTramos() {
         totalSum += monto;
         listHtml += `
             <div class="tramosRow">
-                <h3 class="tT-1 tB-1">${sufijo}</h3>
-                <h3 class="tT-2 tB-2">${e.conEnc}</h3>
-                <h3 class="tT-3 tB-3">${monto.toFixed(2)}</h3>
+                <h3 class="tT-1 nm tB-1">${sufijo}</h3>
+                <h3 class="tT-2 nm tB-2">${e.conEnc}</h3>
+                <h3 class="tT-3 nm tB-3">${monto.toFixed(2)}</h3>
             </div>
         `;
     });
@@ -424,9 +424,9 @@ function printTramos() {
             <h1>Medios Tramos</h1>
             <h3>${fecha}</h3>
             <div id="tramosTitle">
-                <h3 class="tT-1 tB-1">Dest</h3>
-                <h3 class="tT-2 tB-2">Enc</h3>
-                <h3 class="tT-3 tB-3">Total</h3>
+                <h3 class="tT-1 nm tB-1">Dest</h3>
+                <h3 class="tT-2 nm tB-2">Enc</h3>
+                <h3 class="tT-3 nm tB-3">Total</h3>
             </div>
             <div id="tramosList">${listHtml}</div>
             <hr>
