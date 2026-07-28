@@ -25,6 +25,7 @@
                         <button onclick="printDiv('1')">IMPRIMIR MANIFIESTOS</button>
                         <button onclick="resPrint()">IMPRIMIR RESUMEN</button>
                         <button onclick="printDiv('2')">IMPRIMIR VERTICAL</button>
+                        <button onclick="tramos()">TRAMOS</button>
                         <button onclick="goExcel()">EXCEL</button>
                     </div>
                     <div>
@@ -75,6 +76,8 @@
     </div>
 
     <div id="resumen"></div>
+    <div id="modBox" class="modal"></div>
+    <div id="tramosPrint"></div>
     <div id="toast"></div>
     <script src="js/supabase.js"></script>
     <script src="js/llegada.js"></script>

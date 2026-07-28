@@ -9,6 +9,7 @@ include '../conexion.php';
                 INNER JOIN zonas z ON z.nombreZona = e.destino
                 WHERE codeViaje = ?
                   AND e.destino <> 'Cochabamba'
+                  AND e.destino <> 'Montero'
                   AND e.destino <> 'Santa Cruz'";
 
         $stmt = $conexion->prepare($sql);

@@ -321,3 +321,123 @@ function goExcel() {
 
     showToast("Excel generado exitosamente", false);
 }
+
+let tramosData = [];
+
+function tramos() {
+    let box = document.getElementById("modBox");
+    if (!box) {
+        showToast("Error: modal no encontrado", true);
+        return;
+    }
+    box.style.display = "flex";
+    box.innerHTML = `
+        <div id="tramosContainer">
+            <h1>Medios Tramos</h1>
+            <h3>${fecha}</h3>
+            <div id="tramosTitle">
+                <h3 class="tT-1 tB-1">Dest</h3>
+                <h3 class="tT-2 tB-2">Enc</h3>
+                <h3 class="tT-3 tB-3">Total</h3>
+            </div>
+            <div id="tramosList"></div>
+            <div id="tramosFoot"></div>
+            <div class="sb">
+                <button class="cerrar" onclick="closeModal()">Cerrar</button>
+                <button onclick="printTramos()">Imprimir</button>
+            </div>
+        </div>
+    `;
+    let tramosList = document.getElementById("tramosList");
+    let tramosFoot = document.getElementById("tramosFoot");
+    fetch(`php/llegada/getTramosEB.php?viajeCod=${encodeURIComponent(viaje)}`)
+    .then(response => response.json())
+    .then(data => {
+        let destinosFiltro = ["SCZ", "CBBA", "MON"];
+        let filtrados = data.filter(e => {
+            let partes = e.conEnc.split('-');
+            let sufijo = partes.length > 1 ? partes[1].trim().toUpperCase() : "";
+            return !destinosFiltro.includes(sufijo);
+        });
+        tramosData = filtrados;
+        if (!Array.isArray(filtrados) || filtrados.length === 0) {
+            tramosList.innerHTML = '<p>No hay tramos para este viaje.</p>';
+            return;
+        }
+        let totalSum = 0;
+        filtrados.forEach(e => {
+            let partes = e.conEnc.split('-');
+            let sufijo = partes.length > 1 ? partes[1] : "";
+            let monto = parseFloat(e.total) || 0;
+            totalSum += monto;
+            tramosList.innerHTML += `
+                <div class="tramosRow">
+                    <h3 class="tT-1 tB-1">${sufijo}</h3>
+                    <h3 class="tT-2 tB-2">${e.conEnc}</h3>
+                    <h3 class="tT-3 tB-3">${monto.toFixed(2)}</h3>
+                </div>
+            `;
+        });
+        tramosFoot.innerHTML = `
+            <hr>
+            <div class="sb">
+                <h3>Total:</h3>
+                <h3>${totalSum.toFixed(2)} Bs</h3>
+            </div>
+        `;
+    })
+    .catch(error => console.error("Error al cargar los Tramos: ", error));
+}
+
+function closeModal() {
+    let box = document.getElementById("modBox");
+    if (box) box.style.display = "none";
+}
+
+function printTramos() {
+    let printBox = document.getElementById("tramosPrint");
+    if (!printBox) {
+        showToast("Error: elemento de impresion no encontrado", true);
+        return;
+    }
+    if (!Array.isArray(tramosData) || tramosData.length === 0) {
+        showToast("No hay datos para imprimir", true);
+        return;
+    }
+    let listHtml = "";
+    let totalSum = 0;
+    tramosData.forEach(e => {
+        let partes = e.conEnc.split('-');
+        let sufijo = partes.length > 1 ? partes[1] : "";
+        let monto = parseFloat(e.total) || 0;
+        totalSum += monto;
+        listHtml += `
+            <div class="tramosRow">
+                <h3 class="tT-1 tB-1">${sufijo}</h3>
+                <h3 class="tT-2 tB-2">${e.conEnc}</h3>
+                <h3 class="tT-3 tB-3">${monto.toFixed(2)}</h3>
+            </div>
+        `;
+    });
+    printBox.innerHTML = `
+        <div id="tramosPrintContent">
+            <h1>Medios Tramos</h1>
+            <h3>${fecha}</h3>
+            <div id="tramosTitle">
+                <h3 class="tT-1 tB-1">Dest</h3>
+                <h3 class="tT-2 tB-2">Enc</h3>
+                <h3 class="tT-3 tB-3">Total</h3>
+            </div>
+            <div id="tramosList">${listHtml}</div>
+            <hr>
+            <div class="sb">
+                <h3>Total:</h3>
+                <h3>${totalSum.toFixed(2)} Bs</h3>
+            </div>
+        </div>
+    `;
+    printBox.classList.add("print-visible");
+    window.print();
+    printBox.classList.remove("print-visible");
+    printBox.innerHTML = "";
+}
