@@ -73,6 +73,7 @@ function cargarTitulos(){
         <h2 id="tt">T</h2>
         <h2 id="num">N°</h2>
         <h2 id="con">Consignatario</h2>
+        <h2 id="ci">Ci</h2>
         <h2 id="det">Detalle</h2>
         <h2 id="cel">Cel</h2>
     `;
@@ -205,6 +206,7 @@ function obtenerEncomiendas() {
                     <h3 class="ttc"></h3>
                     <h3 class="conE">${maxConEnc}</h3>
                     <h3 class="consg">${encomienda.consignatario}</h3>
+                    <h3 class="ci"></h3>
                     ${bultosMax}
                     <h3 class="cel">${telfImp}</h3>
                 `;
@@ -368,12 +370,14 @@ function tramos() {
         filtrados.forEach(e => {
             let partes = e.conEnc.split('-');
             let sufijo = partes.length > 1 ? partes[1] : "";
+            let numEnc = partes[0];
+            if (numEnc.length > 5) numEnc = numEnc.slice(-5);
             let monto = parseFloat(e.total) || 0;
             totalSum += monto;
             tramosList.innerHTML += `
                 <div class="tramosRow">
                     <h3 class="tT-1 nm tB-1">${sufijo}</h3>
-                    <h3 class="tT-2 nm tB-2">${e.conEnc}</h3>
+                    <h3 class="tT-2 nm tB-2">${numEnc}</h3>
                     <h3 class="tT-3 nm tB-3">${monto.toFixed(2)}</h3>
                 </div>
             `;
@@ -409,12 +413,14 @@ function printTramos() {
     tramosData.forEach(e => {
         let partes = e.conEnc.split('-');
         let sufijo = partes.length > 1 ? partes[1] : "";
+        let numEnc = partes[0];
+        if (numEnc.length > 5) numEnc = numEnc.slice(-5);
         let monto = parseFloat(e.total) || 0;
         totalSum += monto;
         listHtml += `
             <div class="tramosRow">
                 <h3 class="tT-1 nm tB-1">${sufijo}</h3>
-                <h3 class="tT-2 nm tB-2">${e.conEnc}</h3>
+                <h3 class="tT-2 nm tB-2">${numEnc}</h3>
                 <h3 class="tT-3 nm tB-3">${monto.toFixed(2)}</h3>
             </div>
         `;

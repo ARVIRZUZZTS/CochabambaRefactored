@@ -725,10 +725,12 @@ function tramos() {
             return;
         }
         data.forEach(tramo => {
+            let numEnc = tramo.conEnc.split('-')[0];
+            if (numEnc.length > 5) numEnc = numEnc.slice(-5);
             tramosList.innerHTML += `
                 <div class="tramosRow">
                     <h3 class="tT-1 nm tB-1">${tramo.abrev}</h3>
-                    <h3 class="tT-2 nm tB-2">${tramo.conEnc}</h3>
+                    <h3 class="tT-2 nm tB-2">${numEnc}</h3>
                     <h3 class="tT-3 nm tB-3">${parseFloat(tramo.segT).toFixed(2)}</h3>
                 </div>
             `;
@@ -757,10 +759,12 @@ function printTramos() {
     }
     let listHtml = "";
     tramosData.forEach(tramo => {
+        let numEnc = tramo.conEnc.split('-')[0];
+        if (numEnc.length > 5) numEnc = numEnc.slice(-5);
         listHtml += `
             <div class="tramosRow">
                 <h3 class="tT-1 nm tB-1">${tramo.abrev}</h3>
-                <h3 class="tT-2 nm tB-2">${tramo.conEnc}</h3>
+                <h3 class="tT-2 nm tB-2">${numEnc}</h3>
                 <h3 class="tT-3 nm tB-3">${parseFloat(tramo.segT).toFixed(2)}</h3>
             </div>
         `;
