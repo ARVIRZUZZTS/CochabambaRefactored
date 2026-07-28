@@ -692,47 +692,99 @@ function eliminar() {
     })
     .catch(error => console.error("Error al eliminar:", error));
 }
+let tramosData = [];
+
 function tramos() {
-    let box = document.getElementById("modBox");    
-    //aqui generamos un modal como en menu.js/menu.html pero mostrariamos
+    let box = document.getElementById("modBox");
+    box.style.display = "flex";
     box.innerHTML = `
-        div
-            h1 Medios Tramos
-            h3 ${fecha}
-        /div
-        div #tramosTitle
-            h3 .tT-1 .tB-1 Dest
-            h3 .tT-2 .tB-2 Enc
-            h3 .tT-3 .tB-3 Total
-        /div
-        div #tramosList
-        /div
+        <div id="tramosContainer">
+            <h1>Medios Tramos</h1>
+            <h3 class="nm">${fecha}</h3>
+            <div id="tramosTitle">
+                <h3 class="tT-1 nm tB-1">Dest</h3>
+                <h3 class="tT-2 nm tB-2">Enc</h3>
+                <h3 class="tT-3 nm tB-3">Total</h3>
+            </div>
+            <div id="tramosList"></div>
+            <div id="tramosFoot"></div>
+            <div class="sb">
+                <button class="cerrar" onclick="closeModal()">Cerrar</button>
+                <button onclick="printTramos()">Imprimir</button>
+            </div>
+        </div>
     `;
     let tramosList = document.getElementById("tramosList");
+    let tramosFoot = document.getElementById("tramosFoot");
     fetch(`php/informacion/getTramos.php?viajeCod=${encodeURIComponent(viaje)}`)
     .then(response => response.json())
     .then(data => {
+        tramosData = data;
+        if (!Array.isArray(data) || data.length === 0) {
+            tramosList.innerHTML = '<p>No hay tramos para este viaje.</p>';
+            return;
+        }
         data.forEach(tramo => {
             tramosList.innerHTML += `
-                div
-                    h3 .tT-1 .tB-1 ${tramo.abrev}
-                    h3 .tT-2 .tB-2 ${tramo.conEnc}
-                    h3 .tT-3 .tB-3 ${segT}r
-                /div
+                <div class="tramosRow">
+                    <h3 class="tT-1 nm tB-1">${tramo.abrev}</h3>
+                    <h3 class="tT-2 nm tB-2">${tramo.conEnc}</h3>
+                    <h3 class="tT-3 nm tB-3">${parseFloat(tramo.segT).toFixed(2)}</h3>
+                </div>
             `;
         });
         let aux = tramo2C + tramo2PP;
-        box.innerHTML += `
-            hr
-            div .sb
-                h3 Total:
-                h3 ${aux}r
-            /div
-            div .sb
-                button onclick="closeModal()" Cerrar
-                button onclick="printTramos()" Imprimir
-            /div
+        tramosFoot.innerHTML = `
+            <hr>
+            <div class="sb">
+                <h3 class="nm">Total:</h3>
+                <h3 class="nm">${aux.toFixed(2)} Bs</h3>
+            </div>
         `;
     })
     .catch(error => console.error("Error al cargar los Tramos: ", error));
+}
+
+function closeModal() {
+    document.getElementById("modBox").style.display = "none";
+}
+
+function printTramos() {
+    let printBox = document.getElementById("tramosPrint");
+    if (!Array.isArray(tramosData) || tramosData.length === 0) {
+        showToast("No hay datos para imprimir", true);
+        return;
+    }
+    let listHtml = "";
+    tramosData.forEach(tramo => {
+        listHtml += `
+            <div class="tramosRow">
+                <h3 class="tT-1 nm tB-1">${tramo.abrev}</h3>
+                <h3 class="tT-2 nm tB-2">${tramo.conEnc}</h3>
+                <h3 class="tT-3 nm tB-3">${parseFloat(tramo.segT).toFixed(2)}</h3>
+            </div>
+        `;
+    });
+    let aux = tramo2C + tramo2PP;
+    printBox.innerHTML = `
+        <div id="tramosPrintContent">
+            <h1>Medios Tramos</h1>
+            <h3>${fecha}</h3>
+            <div id="tramosTitle">
+                <h3 class="tT-1 nm tB-1">Dest</h3>
+                <h3 class="tT-2 nm tB-2">Enc</h3>
+                <h3 class="tT-3 nm tB-3">Total</h3>
+            </div>
+            <div id="tramosList">${listHtml}</div>
+            <hr>
+            <div class="nm sb">
+                <h3>Total:</h3>
+                <h3>${aux.toFixed(2)} Bs</h3>
+            </div>
+        </div>
+    `;
+    printBox.classList.add("print-visible");
+    window.print();
+    printBox.classList.remove("print-visible");
+    printBox.innerHTML = "";
 }

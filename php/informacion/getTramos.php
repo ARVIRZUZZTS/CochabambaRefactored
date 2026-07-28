@@ -5,20 +5,20 @@ include '../conexion.php';
 
     if ($viajeCod !== '') {
         $sql = "SELECT e.conEnc, z.abrev, e.segT
-                FROM encomiendas e
+                FROM encomienda e
                 INNER JOIN zonas z ON z.nombreZona = e.destino
-                WHERE codeViaje = ?";
+                WHERE codeViaje = ?
+                  AND e.destino <> 'Cochabamba'
+                  AND e.destino <> 'Santa Cruz'";
 
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("s", $viajeCod);
 
-        $success = $stmt->execute();
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $tramos = $result->fetch_all(MYSQLI_ASSOC);
 
-        if ($success) {
-            echo json_encode(["success" => true]);
-        } else {
-            echo json_encode(["success" => false, "error" => $stmt->error]);
-        }
+        echo json_encode($tramos);
 
         $stmt->close();
     } else {

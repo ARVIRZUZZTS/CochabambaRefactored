@@ -78,6 +78,7 @@ select {
     display: flex;
     justify-content: space-between;
 }
+.nm { margin: 0px; }
 /*-------------------MODAL-------------------*/
 .modal {
     display: none; 

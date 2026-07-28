@@ -177,6 +177,41 @@ main {
     display: none;
     height: min-content !important;
 }
+#tramosPrint {
+    display: none;
+    height: min-content !important;
+}
+#tramosContainer {
+    background: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+#tramosTitle, .tramosRow {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+}
+#tramosList {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.tT-1 { width: 25%; }
+.tT-2 { width: 45%; }
+.tT-3 { width: 30%; }
+#tramosContainer .sb {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+#tramosContainer .sb button {
+    width: auto;
+    padding: 0 15px;
+}
 #boletin {
     display: none;
     height: min-content !important;
@@ -211,7 +246,7 @@ main {
     }
     
     /* Ocultar todos por defecto */
-    #ticket, #boletin, #resumen {
+    #ticket, #boletin, #resumen, #modBox {
         display: none !important;
     }
     
@@ -246,6 +281,19 @@ main {
     #resumen.print-visible {
         display: block !important;
         height: auto !important;
+    }
+    
+    #tramosPrint.print-visible {
+        display: flex !important;
+        flex-direction: column;
+        font-family: monospace !important;
+        font-size: 12px;
+        text-align: center;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible;
+        position: static;
     }
     
     #ticket.print-visible * {
