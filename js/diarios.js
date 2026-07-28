@@ -116,17 +116,21 @@ function diarios() {
                 }
 
 
+                let [numP, ciuP] = encomienda.conEnc.split('-');
+                if (numP.length > 5) numP = numP.slice(-5);
+                let maxConEnc = ciuP ? `${numP}-${ciuP}` : numP;
+
                 if (encomienda.estadoPaga.trim() == "1" || encomienda.estadoPaga.trim() == "2") {
                     encomiendaHTML += `
-                        <textarea readonly class="${estadoPagaClass}">${estadoPagaTexto}\n${encomienda.conEnc}</textarea>
+                        <textarea readonly class="${estadoPagaClass}">${estadoPagaTexto}\n${maxConEnc}</textarea>
                     `;
                 } else if (encomienda.estadoPaga.trim() == "3") {
                     encomiendaHTML += `
-                        <textarea readonly class="${estadoPagaClass}">Canc | PXP\n${encomienda.conEnc}</textarea>
+                        <textarea readonly class="${estadoPagaClass}">Canc | PXP\n${maxConEnc}</textarea>
                     `;
                 } else {
                     encomiendaHTML += `
-                        <textarea readonly class="${estadoPagaClass}">PXP | Canc\n${encomienda.conEnc}</textarea>
+                        <textarea readonly class="${estadoPagaClass}">PXP | Canc\n${maxConEnc}</textarea>
                     `;
                 }
 
@@ -277,12 +281,17 @@ function imprimir(conEnc) {
                     }
                 }
 
+                let numEncD = data.encomienda.conEnc.split('-');
+                let numPartD = numEncD[0];
+                if (numPartD.length > 5) numPartD = numPartD.slice(-5);
+                let visEncD = numEncD.length > 1 ? `${numPartD}-${numEncD[1]}` : numPartD;
+
                 document.getElementById("print").innerHTML = `
                     <img id="imgPr" src="img/logXXF.png" alt="">
                     <p>${direccion} Telf: ${telefonos}</p>
                     <h1>${txtpagar}</h1>
                     <div id="impDiv">
-                        <h1 id="guia"><strong>GUIA N°:</strong> ${data.encomienda.conEnc}</h1>
+                        <h1 id="guia"><strong>GUIA N°:</strong> ${visEncD}</h1>
                         <div id="dat">
                             <h1><strong>Fecha:</strong> ${data.encomienda.fecha}</h1>
                             <h2><strong>Hora de emision:</strong> ${hora}</h2>

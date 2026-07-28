@@ -271,12 +271,17 @@ function imprimir(conEnc) {
                     txtpagar = "GUIA PxP EN DESTINO";
                 }
 
+                let numEncC = data.encomienda.conEnc.split('-');
+                let numPartC = numEncC[0];
+                if (numPartC.length > 5) numPartC = numPartC.slice(-5);
+                let visEncC = numEncC.length > 1 ? `${numPartC}-${numEncC[1]}` : numPartC;
+
                 document.getElementById("boletin").innerHTML = `
                     <img id="imgPr2" src="img/logXXF.png" alt="">
                     <p>${direccion} Telf: ${telefonos}</p>
                     <h1>${txtpagar}</h1>
                     <div id="impDiv2">
-                        <h1 id="guia"><strong>Guia N°:</strong> ${data.encomienda.conEnc}</h1>
+                        <h1 id="guia"><strong>Guia N°:</strong> ${visEncC}</h1>
                         <div id="dat2">
                             <h1><strong>Fecha:</strong> ${data.encomienda.fecha}</h1>
                             <h2><strong>Hora Emision:</strong>${hora}</h2>

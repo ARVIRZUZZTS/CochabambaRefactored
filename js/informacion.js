@@ -543,12 +543,17 @@ function imprimir(conEnc) {
                     }
                 }
 
+                let numEncI = data.encomienda.conEnc.split('-');
+                let numPartI = numEncI[0];
+                if (numPartI.length > 5) numPartI = numPartI.slice(-5);
+                let visEncI = numEncI.length > 1 ? `${numPartI}-${numEncI[1]}` : numPartI;
+
                 document.getElementById("boletin").innerHTML = `
                     <img id="imgPr2" src="img/logXXF.png" alt="">
                     <p>${direccion} Telf: ${telefonos}</p>
                     <h1>${txtpagar}</h1>
                     <div id="impDiv2">
-                        <h1 id="guia"><strong>Guia N°:</strong> ${data.encomienda.conEnc}</h1>
+                        <h1 id="guia"><strong>Guia N°:</strong> ${visEncI}</h1>
                         <div id="dat2">
                             <h1><strong>Fecha:</strong> ${data.encomienda.fecha}</h1>
                             <h2><strong>Hora Emision:</strong>${hora}</h2>

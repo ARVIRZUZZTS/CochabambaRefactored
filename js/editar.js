@@ -9,7 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
     procesarViajesPendientes();
     sety();
     cargarDestinos();
-    document.getElementById("titleEncomienda").innerText = `Editar datos de la Encomienda: ${code}`;
+    let numEncE = code.split('-');
+    let numPartE = numEncE[0];
+    if (numPartE.length > 5) numPartE = numPartE.slice(-5);
+    let visEncE = numEncE.length > 1 ? `${numPartE}-${numEncE[1]}` : numPartE;
+    document.getElementById("titleEncomienda").innerText = `Editar datos de la Encomienda: ${visEncE}`;
 });
 function sety() {
     fetch(`php/editar/getSoloEnc.php?conEnc=${encodeURIComponent(code)}`)
