@@ -336,3 +336,81 @@ main {
 #modCRight {
     margin-top: 12px;
 }
+.rangoFechas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0;
+}
+.campoFecha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.campoFecha label {
+    font-size: large;
+}
+.campoFecha input[type="date"] {
+    font-size: large;
+    padding: 8px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    width: 60%;
+}
+#porcentajePrint {
+    display: none;
+}
+@media print {
+    header, main, #modBox, #toast {
+        display: none !important;
+    }
+    #porcentajePrint.print-visible {
+        display: flex !important;
+        flex-direction: column;
+        font-family: monospace !important;
+        font-size: 12px;
+        text-align: center;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible;
+        position: static;
+    }
+    #porcentajePrintContent img {
+        width: 300px;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+    #porcentajePrintContent h1 {
+        text-align: center;
+        margin: 8px 0;
+    }
+    #porcentajePrintContent h3 {
+        margin: 4px 0;
+    }
+    #tablaPorcentajes {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    #tablaPorcentajes th, #tablaPorcentajes td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 2px 4px;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center;
+    }
+    #tablaPorcentajes thead {
+        display: table-header-group;
+    }
+    #tablaPorcentajes tbody tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    #tablaPorcentajes tfoot tr td {
+        font-weight: bold;
+    }
+}

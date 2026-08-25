@@ -114,7 +114,15 @@ select {
     text-align: center;
     box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
-.mod-contingencia div:first-child {
+.mod-porcentaje {
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    background: white;
+    margin: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
 #modCRight {
     width: 60vh;

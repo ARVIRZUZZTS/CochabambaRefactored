@@ -49,6 +49,7 @@ function flotas() {
             <h2 id="prFl">PROPIETARIO</h2>
             <h2 id="chFl">CHOFER</h2>
             <h2 id="liFl">LICENCIA</h2>
+            <h2 id="tiFl">TIPO</h2>
             <h2 id="edFl">EDITAR</h2>
         `;
 
@@ -66,6 +67,7 @@ function flotas() {
                     <h2 class="prFl">${f.propietario}</h2>
                     <h2 class="chFl">${f.chofer}</h2>
                     <h2 class="liFl">${f.licencia}</h2>
+                    <h2 class="tiFl">${f.tipo || "Ok"}</h2>
                     <button onclick="editarFlota(this)">Editar</button>
                 </div>
             `;
@@ -210,12 +212,17 @@ function editarFlota(btn) {
     const propietario = fila.querySelector(".prFl").textContent;
     const chofer = fila.querySelector(".chFl").textContent;
     const licencia = fila.querySelector(".liFl").textContent;
+    const tipo = fila.querySelector(".tiFl").textContent;
 
     fila.innerHTML = `
         <input class="plFl" value="${placa}" disabled>
         <input class="prFl" value="${propietario}"  maxlength="100">
         <input class="chFl" value="${chofer}"  maxlength="100">
         <input class="liFl" value="${licencia}"  maxlength="10">
+        <select class="tiFl">
+            <option value="Ok" ${tipo === "Ok" ? "selected" : ""}>Ok</option>
+            <option value="Familiar" ${tipo === "Familiar" ? "selected" : ""}>Familiar</option>
+        </select>
         <button onclick="guardarFlota(this)">Guardar</button>
         <button onclick="eliminarFlota(this)">Eliminar</button>
         <button onclick="cancelarEdicion(this)">Cancelar</button>
@@ -230,13 +237,14 @@ function guardarFlota(btn) {
     const propietario = fila.querySelector(".prFl").value.trim();
     const chofer = fila.querySelector(".chFl").value.trim();
     const licencia = fila.querySelector(".liFl").value.trim();
+    const tipo = fila.querySelector(".tiFl").value;
 
     if (!propietario || !chofer || !licencia) {
         alert("Completa todos los campos");
         return;
     }
 
-    fetch(`php/configuracion/editFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
+    fetch(`php/configuracion/editFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}&tipo=${encodeURIComponent(tipo)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -253,13 +261,14 @@ function guardarNuevaFlota(btn) {
     const propietario = fila.querySelector(".prFl").value.trim();
     const chofer = fila.querySelector(".chFl").value.trim();
     const licencia = fila.querySelector(".liFl").value.trim();
+    const tipo = fila.querySelector(".tiFl").value;
 
     if (!placa || !propietario || !chofer || !licencia) {
         alert("Completa todos los campos");
         return;
     }
 
-    fetch(`php/configuracion/newFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}`)
+    fetch(`php/configuracion/newFlota.php?placa=${encodeURIComponent(placa)}&propietario=${encodeURIComponent(propietario)}&chofer=${encodeURIComponent(chofer)}&licencia=${encodeURIComponent(licencia)}&tipo=${encodeURIComponent(tipo)}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
@@ -325,6 +334,10 @@ function nuevaFlota() {
         <input class="prFl" placeholder="Propietario"  maxlength="100">
         <input class="chFl" placeholder="Chofer"  maxlength="100">
         <input class="liFl" placeholder="Licencia"  maxlength="10">
+        <select class="tiFl">
+            <option value="Ok" selected>Ok</option>
+            <option value="Familiar">Familiar</option>
+        </select>
         <button onclick="guardarNuevaFlota(this)">Guardar</button>
         <button onclick="cancelarNuevo(this)">Cancelar</button>
     `;

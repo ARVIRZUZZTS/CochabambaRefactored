@@ -427,8 +427,11 @@ function printTramos() {
     });
     printBox.innerHTML = `
         <div id="tramosPrintContent">
-            <h1>Medios Tramos</h1>
-            <h3>${fecha}</h3>
+            <img id="imgPr3" src="img/logXXF.png" alt="">
+            <div class="sb">
+                <h2>Medios Tramos</h2>
+                <h3>${fecha}</h3>
+            </div>
             <div id="tramosTitle">
                 <h3 class="tT-1 nm tB-1">Dest</h3>
                 <h3 class="tT-2 nm tB-2">Enc</h3>

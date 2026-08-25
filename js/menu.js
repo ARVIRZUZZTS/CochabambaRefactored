@@ -49,6 +49,7 @@ function setModalOpt() {
             <h2>Opciones</h2>
             <button onclick="setContingencia()">Contingencia</button>
             <button onclick="listas()">Configuracion</button>
+            <button onclick="setPorcentajes()">Porcentajes</button>
             <button onclick="out()">Cerrar Sesión</button>        
             <button class="cerrar" onclick="closeModal()">Cancelar</button>
         </div>
@@ -116,6 +117,174 @@ function setContingencia() {
         diasCont.push(dia);
     }
     cargarViajesFecha(dia);
+}
+
+function setPorcentajes() {
+    diasCont = [];
+    codesCont = [];
+
+    let modBox = document.getElementById('modBox');
+    modBox.innerHTML = `
+        <div class="mod-porcentaje">
+            <label class="titleFech noBack">Selecciona el Rango de Fechas del Reporte:</label>
+            <hr>
+            <div id="modCRight">
+                <div class="separate">
+                    <h2>Rango de Fechas</h2>
+                </div>
+                <div class="flex">
+                    <div class="rangoFechas">
+                        <div class="campoFecha">
+                            <label for="porcDesde" style="font-weight:bold">Desde:</label>
+                            <input type="date" id="porcDesde">
+                        </div>
+                        <div class="campoFecha">
+                            <label for="porcHasta" style="font-weight:bold">Hasta:</label>
+                            <input type="date" id="porcHasta">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="sb">
+                        <button class="cerrar" onclick="setModalOpt()">Atras</button>
+                        <button onclick="impPorcentajes()">IMPRIMIR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    let hoy = new Date();
+    let hace15 = new Date(hoy);
+    hace15.setDate(hace15.getDate() - 15);
+    document.getElementById("porcDesde").value = fmtDateISO(hoy);
+    document.getElementById("porcHasta").value = fmtDateISO(hace15);
+}
+
+function fmtDateISO(d) {
+    let dd = String(d.getDate()).padStart(2, "0");
+    let mm = String(d.getMonth() + 1).padStart(2, "0");
+    return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+function isoToDmy(iso) {
+    let p = iso.split("-");
+    return `${p[2]}-${p[1]}-${p[0]}`;
+}
+
+function impPorcentajes() {
+    let desde = document.getElementById("porcDesde").value;
+    let hasta = document.getElementById("porcHasta").value;
+    if (!desde || !hasta) {
+        showToast("Seleccione ambas fechas del rango.", true);
+        return;
+    }
+    if (desde > hasta) {
+        let aux = desde;
+        desde = hasta;
+        hasta = aux;
+    }
+
+    fetch("php/menu/getPorcentajes.php", {
+        method: "POST",
+        body: new URLSearchParams({ desde: isoToDmy(desde), hasta: isoToDmy(hasta) })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) throw new Error(data.error);
+        console.log("Datos porcentajes:", data);
+
+        let printBox = document.getElementById("porcentajePrint");
+        if (!printBox) {
+            showToast("No se encontro el contenedor de impresion.", true);
+            return;
+        }
+
+        let filas = "";
+        let totBruto = 0, totTotal = 0, totCBBA = 0, totSC = 0;
+
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach(v => {
+                totBruto += parseFloat(v.montoBruto);
+                totTotal += parseFloat(v.totalPct);
+                totCBBA += parseFloat(v.cbbaPct);
+                totSC += parseFloat(v.scPct);
+                filas += `
+                    <tr>
+                        <td>${v.fecha}</td>
+                        <td>${v.propietario}</td>
+                        <td>${v.placa}</td>
+                        <td>${parseFloat(v.montoBruto).toFixed(2)}</td>
+                        <td>${Math.ceil(parseFloat(v.totalPct))}</td>
+                        <td>${parseFloat(v.cbbaPct)}</td>
+                        <td>${Math.ceil(parseFloat(v.scPct))}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        printBox.innerHTML = `
+            <div id="porcentajePrintContent">
+                <div class="sb">
+                    <img id="imgPrPorc" src="img/logXXF.png" alt="">
+                    <div>
+                        <h1>PORCENTAJES DE ENCOMIENDAS</h1>
+                        <h3>Desde: ${isoToDmy(desde)} — Hasta: ${isoToDmy(hasta)}</h3>
+                    </div>
+                </div>
+                <table id="tablaPorcentajes">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Propietario</th>
+                            <th>Placa</th>
+                            <th>Monto Bruto</th>
+                            <th>Total 15-16%</th>
+                            <th>CBBA 9%</th>
+                            <th>SC 6-7%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filas || `<tr><td colspan="7">No hay viajes en el rango seleccionado.</td></tr>`}
+                    </tbody>
+                    ${filas ? `
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">TOTAL</td>
+                            <td>${totBruto.toFixed(2)}</td>
+                            <td>${Math.ceil(totTotal)}</td>
+                            <td>${Math.round(totCBBA)}</td>
+                            <td>${Math.ceil(totSC)}</td>
+                        </tr>
+                    </tfoot>` : ""}
+                </table>
+            </div>
+        `;
+        const imgElement = printBox.querySelector("#imgPrPorc");
+        const imgPreload = new Image();
+        const conteo = Array.isArray(data) ? data.length : 0;
+
+        imgPreload.onload = function () {
+            imgElement.src = imgPreload.src;
+            printBox.classList.add("print-visible");
+            window.print();
+            printBox.classList.remove("print-visible");
+            printBox.innerHTML = "";
+            showToast(`Reporte generado con ${conteo} viajes.`);
+        };
+        imgPreload.onerror = function () {
+            console.warn("No se pudo cargar la imagen, imprimiendo sin ella");
+            printBox.classList.add("print-visible");
+            window.print();
+            printBox.classList.remove("print-visible");
+            printBox.innerHTML = "";
+            showToast(`Reporte generado con ${conteo} viajes.`);
+        };
+        imgPreload.src = 'img/logXXF.png';
+    })
+    .catch(err => {
+        console.error("Error obteniendo porcentajes:", err);
+        showToast("Error al generar el reporte.", true);
+    });
 }
 
 function cargarFlotasSelect() {

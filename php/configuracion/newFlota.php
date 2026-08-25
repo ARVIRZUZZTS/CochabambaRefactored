@@ -7,7 +7,8 @@ if (
     !isset($_GET["placa"]) ||
     !isset($_GET["propietario"]) ||
     !isset($_GET["chofer"]) ||
-    !isset($_GET["licencia"])
+    !isset($_GET["licencia"]) ||
+    !isset($_GET["tipo"])
 ) {
     $response["message"] = "Datos incompletos";
     echo json_encode($response);
@@ -18,9 +19,16 @@ $placa = trim($_GET["placa"]);
 $propietario = trim($_GET["propietario"]);
 $chofer = trim($_GET["chofer"]);
 $licencia = trim($_GET["licencia"]);
+$tipo = trim($_GET["tipo"]);
 
 if ($placa === "" || $propietario === "" || $chofer === "" || $licencia === "") {
     $response["message"] = "Todos los campos son obligatorios";
+    echo json_encode($response);
+    exit;
+}
+
+if ($tipo !== "Ok" && $tipo !== "Familiar") {
+    $response["message"] = "Tipo inválido";
     echo json_encode($response);
     exit;
 }
@@ -39,8 +47,8 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-$sqlInsert = "INSERT INTO FLOTA (placa, propietario, chofer, licencia)
-              VALUES (?, ?, ?, ?)";
+$sqlInsert = "INSERT INTO FLOTA (placa, propietario, chofer, licencia, tipo)
+              VALUES (?, ?, ?, ?, ?)";
 
 $stmt = $conexion->prepare($sqlInsert);
 
@@ -50,7 +58,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("ssss", $placa, $propietario, $chofer, $licencia);
+$stmt->bind_param("sssss", $placa, $propietario, $chofer, $licencia, $tipo);
 
 if ($stmt->execute()) {
     $response["success"] = true;

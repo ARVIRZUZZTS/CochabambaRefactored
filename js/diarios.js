@@ -35,6 +35,11 @@ function cargarPlacas(selectId, destino, conEnc, viajeCod) {
             select.innerHTML = '<option value="">-</option>';
         }
         console.log(data);
+        let vacio = document.createElement("option");
+        vacio.value = '-';
+        vacio.setAttribute("data-viajeCod", '-');
+        vacio.textContent = "Sin Placa";
+        select.appendChild(vacio);
         data.forEach(viaje => {
             let opt = document.createElement("option");
             opt.value = viaje.viajeCod.trim();
@@ -185,7 +190,16 @@ function diarios() {
     .catch(error => console.error("Error obteniendo viajes:", error));
 }
 async function guardarAutomatico(code, conEncInp) {
-    if (code !== "" && code !== "-") {  
+    if (code == "-") {
+        fetch(`php/diarios/guardarEncomienda.php?conEnc=${encodeURIComponent(conEncInp)}&viajeCod=${encodeURIComponent(code)}`)
+        .then(response => response.json())
+        .then(async (result) => {
+            console.log("Encomienda guardada automáticamente");
+        })                
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+        });
+    } else if (code !== "") {  
         fetch(`php/diarios/getViajeDia.php?code=${encodeURIComponent(code)}&fecha=${encodeURIComponent(diaL)}&depto=${encodeURIComponent(zonaL)}`)
         .then(response => response.json())
         .then(async (data) => {
