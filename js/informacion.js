@@ -674,6 +674,169 @@ function resPrint() {
     print();
     document.getElementById('resumen').classList.remove('print-visible');
 }
+
+function montoPxp(encomienda) {
+    const est = encomienda.estadoPaga.trim();
+    if (est == "2") return parseInt(encomienda.total) || 0;
+    if (est == "3") return parseInt(encomienda.segT) || 0;
+    if (est == "4") return parseInt(encomienda.priT) || 0;
+    return 0;
+}
+
+function getPxpEncomiendas(callback) {
+    fetch(`php/informacion/infoEnco.php?viaje=${encodeURIComponent(viaje)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const pxp = Array.isArray(data) ? data.filter(e => e.estadoPaga.trim() != "1") : [];
+            if (pxp.length === 0) {
+                showToast("No hay encomiendas PxP para este viaje", true);
+                return;
+            }
+            callback(pxp);
+        })
+        .catch(error => console.error("Error obteniendo encomiendas PxP:", error));
+}
+
+function manifiestoPXP() {
+    getPxpEncomiendas(pxp => {
+        const ticket = document.getElementById('ticket');
+        const impDiv = document.getElementById('impDiv');
+        const titPrint = document.getElementById('titPrint');
+        const pagosBox = document.getElementById('pagos');
+        const destiny = document.getElementById('destiny');
+        const esp = document.getElementById('espacioBox');
+
+        const prevImp = impDiv.innerHTML;
+        const prevTit = titPrint.innerHTML;
+        const prevPagos = pagosBox.innerHTML;
+        const prevDestiny = destiny.textContent;
+        const prevTransform = ticket.style.transform;
+        const prevMargin = esp.style.marginTop;
+
+        let totalPxp = 0;
+        let filas = "";
+        pxp.forEach(encomienda => {
+            let [numero, ciudad] = encomienda.conEnc.split('-');
+            if (numero.length > 5) {
+                numero = numero.slice(-5);
+            }
+            let maxConEnc = `${numero}-${ciudad}`;
+            let telfImp = encomienda.conTelf == "0" ? "R " + encomienda.remTelf : encomienda.conTelf;
+            let bultosMax = encomienda.bulto.length > 50 ? "<h5 class=\"bult\">" + encomienda.bulto + "</h5>" : "<h3 class=\"bult\">" + encomienda.bulto + "</h3>";
+            let monto = montoPxp(encomienda);
+            totalPxp += monto;
+            filas += `
+                <div class="encomienda-print">
+                    <h3 class="ttc"></h3>
+                    <h3 class="conE">${maxConEnc}</h3>
+                    <h3 class="consg">${encomienda.consignatario}</h3>
+                    <h3 class="ci"></h3>
+                    ${bultosMax}
+                    <h3 class="cel">${telfImp}</h3>
+                    <h3 class="fe"></h3>
+                    <h3 class="pago">${monto}</h3>
+                    <h3 class="fir"></h3>
+                </div>
+            `;
+        });
+
+        titPrint.innerHTML = `
+            <h2 id="tt">T</h2>
+            <h2 id="num">N°</h2>
+            <h2 id="con">Consignatario</h2>
+            <h2 id="ci">Ci</h2>
+            <h2 id="det">Detalle</h2>
+            <h2 id="cel">Cel</h2>
+            <h2 id="fe">Fecha</h2>
+            <h2 class="pago">PxP</h2>
+            <h2 id="fir">Firma</h2>
+        `;
+        impDiv.innerHTML = filas;
+        pagosBox.innerHTML = `
+            <h2 id="porPagarPrint">Por Pagar (PxP): ${totalPxp} Bs</h2>
+        `;
+        destiny.textContent = "MANIFIESTO SOLO PxP";
+
+        document.getElementById('boletin').classList.remove('print-visible');
+        document.getElementById('resumen').classList.remove('print-visible');
+        ticket.classList.add('pxp-mode');
+        ticket.style.transform = "rotate(0deg)";
+        esp.style.marginTop = "0cm";
+        ticket.classList.add('print-visible');
+
+        window.print();
+
+        ticket.classList.remove('print-visible');
+        ticket.classList.remove('pxp-mode');
+        impDiv.innerHTML = prevImp;
+        titPrint.innerHTML = prevTit;
+        pagosBox.innerHTML = prevPagos;
+        destiny.textContent = prevDestiny;
+        ticket.style.transform = prevTransform;
+        esp.style.marginTop = prevMargin;
+    });
+}
+
+function resumenPXP() {
+    getPxpEncomiendas(pxp => {
+        const res = document.getElementById('resumen');
+        const prevRes = res.innerHTML;
+
+        let viajeEnco = `Viaje de ${abrevOrg} a ${abrevDes}`;
+        let totalPxp = 0;
+        let filas = "";
+        pxp.forEach(encomienda => {
+            let [numero, ciudad] = encomienda.conEnc.split('-');
+            if (numero.length > 5) {
+                numero = numero.slice(-5);
+            }
+            let maxConEnc = `${numero}-${ciudad}`;
+            let monto = montoPxp(encomienda);
+            totalPxp += monto;
+            filas += `
+                <div>
+                    <h4>${maxConEnc}</h4>
+                    <h4>${monto}</h4>
+                    <h4></h4>
+                </div>
+            `;
+        });
+
+        res.innerHTML = `
+            <img id="imgPr3" src="img/logXXF.png" alt="">
+            <h3 id="titu">LIQ. ENC. PXP</h3>
+            <h3>${viajeEnco}</h3>
+            <h3>Propietario: ${propietario}</h3>
+            <h3>Placa: ${placa}</h3>
+            <div id="fechHR">
+                <h3>Fecha: ${fecha}</h3>
+                <h3>Hora: ${horaAct()}</h3>
+            </div>
+            <div id="titRes">
+                <h3>N°</h3>
+                <h3>Total</h3>
+                <h3>Firma</h3>
+            </div>
+            <div id="listR">${filas}</div>
+            <h3 class="pag">Por Pagar: ${totalPxp} Bs</h3>
+            <div id="spaceRes"></div>
+            <hr>
+        `;
+
+        document.getElementById('ticket').classList.remove('print-visible');
+        document.getElementById('boletin').classList.remove('print-visible');
+        res.classList.add('print-visible');
+        print();
+        res.classList.remove('print-visible');
+        res.innerHTML = prevRes;
+    });
+}
+
 function horaAct() {
     let ahora = new Date();
     let horas = ahora.getHours().toString().padStart(2, "0");

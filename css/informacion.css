@@ -150,6 +150,8 @@ main {
 #precio {
     display: flex;
     justify-content: space-evenly;
+    width: 95%;
+    margin: auto;
 }
 #pagosFoo {
     display: flex;
@@ -162,6 +164,10 @@ main {
     background-color: white;
     border-radius: 10px;
     padding: 10px;
+}
+#accionesPxp {
+    display: flex;
+    gap: 1vh;
 }
 
 .xp {
@@ -357,6 +363,12 @@ main {
     .pago {width: 7.5%; max-width: 7.5%;}
 
     #fir, .fir {width: 13%; max-width: 13%; border-right: none !important;}
+
+    #ticket.print-visible.pxp-mode #fir,
+    #ticket.print-visible.pxp-mode .fir {
+        width: 20.5%;
+        max-width: 20.5%;
+    }
 
     #destiny {
         text-align: center !important;
